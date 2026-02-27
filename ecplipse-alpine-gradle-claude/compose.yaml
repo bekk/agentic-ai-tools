@@ -6,8 +6,8 @@ services:
     volumes:
       - repos:/repos
       - gradle-cache:/root/.gradle
-      - gh-auth:/root/.config/gh      # gh CLI OAuth token (persists across restarts)
-      - claude-auth:/root/.claude     # Claude Code credentials (persists across restarts)
+      - gh-auth:/root/.config/gh
+      - ~/.claude:/root/.claude                # Claude credentials from host
     working_dir: /repos
     ports:
       - "8080:8080"
@@ -26,4 +26,3 @@ volumes:
   repos:
   gradle-cache:
   gh-auth:
-  claude-auth:

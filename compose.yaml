@@ -1,0 +1,29 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - repos:/repos
+      - gradle-cache:/root/.gradle
+      - gh-auth:/root/.config/gh      # gh CLI OAuth token (persists across restarts)
+      - claude-auth:/root/.claude     # Claude Code credentials (persists across restarts)
+    working_dir: /repos
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+    cap_add:
+      - NET_ADMIN
+    stdin_open: true
+    tty: true
+
+volumes:
+  repos:
+  gradle-cache:
+  gh-auth:
+  claude-auth:

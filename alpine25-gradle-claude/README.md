@@ -5,7 +5,7 @@
 
 Utviklingsmiljøet består av to samarbeidende containere:
 1. Nedlåst dev-container for Java 25, GitHub og Claude Code.
-2. Åpen gradle-container for Java 25 og Gradle. Brukes til å laste ned avhengigheter og kjøre opp app
+2. Åpen gradle-container for Java 25 og Gradle. Brukes til å laste ned avhengigheter og kjøre opp applikasjon
 
 Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med antakelsen om at Gradle brukes for bygging. 
 
@@ -16,44 +16,43 @@ Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med
 Forutsetninger: Docker, `docker-compose`
 
 ```sh
-# 1. Klon og gå inn i katalogen
+# 1. [På vertsmaskin] Klon og gå inn i katalogen
 git clone https://github.com/bekk/agentic-ai-tools.git
 cd agentic-ai-tools/alpine25-gradle-claude
 
-# 2. Sett git-identitet
+# 2. [På vertsmaskin] Sett git-identitet
 cp .env.example .env
 # Rediger .env med navn og e-post
 
-# 3. Bygg imaget (én gang)
+# 3. [På vertsmaskin] Bygg imaget (én gang)
 docker-compose build
 
-# 4. Start dev-containeren
+# 4. [På vertsmaskin] Start dev-containeren
 ./dev.sh
 
-# 5. Første gang: autentiser gh og Claude
-gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser 
-claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake)
-
-# 6. Klon ditt repo og start Claude
+# 5. I dev-container] Første gang: autentiser gh og klon aktuelt repo med begrenset token
+gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser
 gh repo clone <org>/<repo>
 cd <repo>
-claude
+
+# 6. [I dev-container] Klon ditt repo og start Claude
+claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake)
 ```
 
 For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 
 ```sh
-# 7. Start gradle-containeren i riktig repo og kjør bygg
+# 7. [På vertsmaskin] Start gradle-containeren i riktig repo og kjør bygging med Gradle i containeren
 ./gradle.sh "cd <repo> && ./gradlew build"
 ```
 
 Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (gradle-runner) når avhengigheter endres, siden dev-runner har begrenset nettverkstilgang.
 
 ```sh
-# 8. [I dev-containeren] Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
+# 8. [I dev-container] Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
 (claude)> build it
 
-# 9. [I gradle-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
+# 9. [I gradle-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
 ./gradlew bootRun  # Hvis Spring Boot benyttes
 ```
 
@@ -77,7 +76,7 @@ Målet er å gi Claude akkurat nok tilgang til å være nyttig, og ikke mer.
 
 ```mermaid
 graph TD
-    host["<b>Host</b>"]
+    host["<b>Vertsmasking</b>"]
 
     host -->|"./dev.sh"| dev["<b>dev-runner</b><br/><br/>JDK 25<br/>Claude Code CLI<br/>gh CLI<br/>git<br/><br/>Nettverk:<br/>✓ GitHub<br/>✓ Anthropic<br/>✗ alt annet"]
     host -->|"./gradle.sh"| gradle["<b>gradle-runner</b><br/><br/>JDK 25<br/><br/>Nettverk:<br/>ubegrenset"]

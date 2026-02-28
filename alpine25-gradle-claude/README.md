@@ -2,7 +2,7 @@
 
 > **Repo:** https://github.com/bekk/agentic-ai-tools
 
-Portabel dev-container for Kotlin/JVM/Gradle-prosjekter med Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
+Portabel og nedlåst utviklingscontainer for Kotlin/JVM/Gradle-prosjekter med Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
 
 ---
 
@@ -44,9 +44,8 @@ For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (gradle-runner) når avhengigheter endres, siden dev-runner har begrenset nettverkstilgang.
 
 ```sh
-# 7. Alternativt: kjør ./gradlew direkte i dev-containeren
-#    Fungerer så lenge avhengigheter og gradle-konfig ikke er endret
-./dev.sh "cd <repo> && ./gradlew test"
+# 7. Få Claude til å bygge repo'et (når avhengigheter ikke endres, eller bruk gradle-containeren)
+(claude)> build it
 ```
 
 ---
@@ -74,12 +73,12 @@ graph TD
     host -->|"./dev.sh"| dev["dev-runner<br/>JDK 25 · Claude Code CLI · gh CLI · git<br/>Nettverk: ✓ GitHub · ✓ Anthropic · ✗ alt annet"]
     host -->|"./gradle.sh"| gradle["gradle-runner<br/>JDK 25<br/>Nettverk: ubegrenset"]
 
+    gradle --- repos
+    gradle --- gcache
     dev --- repos[("repos")]
     dev --- gcache[("gradle-cache")]
     dev --- ghauth[("gh-auth")]
     dev --- clauth[("claude-auth")]
-    gradle --- repos
-    gradle --- gcache
 ```
 
 Nettverksbegrensningen i `dev-runner` settes opp ved oppstart via iptables: GitHubs publiserte IP-blokker hentes fra `api.github.com/meta`, Anthropics endepunkter løses via DNS, deretter blokkeres all annen utgående trafikk.

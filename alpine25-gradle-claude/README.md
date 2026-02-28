@@ -1,4 +1,5 @@
-# Nedlåst utviklingscontainer for agent-støttet utvikling (Java 25, Gradle, GitHub og Claude)
+# Nedlåst utviklingscontainer for agent-støttet utvikling 
+**Med Java 25, Gradle, GitHub og Claude)**
 
 > **Repo:** https://github.com/bekk/agentic-ai-tools
 
@@ -27,7 +28,7 @@ docker-compose build
 
 # 5. Første gang: autentiser gh og Claude
 gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser 
-claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake
+claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake)
 
 # 6. Klon ditt repo og start Claude
 gh repo clone <org>/<repo>

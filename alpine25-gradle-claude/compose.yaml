@@ -29,6 +29,9 @@ services:
       - repos:/repos
       - gradle-cache:/root/.gradle
     working_dir: /repos
+    ports:
+      - "${GRADLE_PORT_1:-8080}:${GRADLE_PORT_1:-8080}"
+      - "${GRADLE_PORT_2:-8081}:${GRADLE_PORT_2:-8081}"
     entrypoint: /bin/sh
     stdin_open: true
     tty: true

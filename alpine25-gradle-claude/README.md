@@ -108,6 +108,17 @@ Kopier `.env.example` til `.env` ved siden av `compose.yaml`:
 ```sh
 GIT_AUTHOR_NAME=Ditt Navn
 GIT_AUTHOR_EMAIL=deg@eksempel.no
+
+# Valgfritt: porter eksponert av gradle-runner (standardverdi: 8080, 8081)
+GRADLE_PORT_1=8080
+GRADLE_PORT_2=8081
+```
+
+`GRADLE_PORT_1` og `GRADLE_PORT_2` styrer hvilke porter gradle-runner eksponerer på verten. Portmappinger settes ved container-opprettelse — hvis du endrer disse etter at `gradle-runner` allerede kjører, må du fjerne containeren først:
+
+```sh
+docker rm -f gradle-runner
+./gradle.sh
 ```
 
 ---

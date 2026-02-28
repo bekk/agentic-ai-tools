@@ -70,8 +70,8 @@ Målet er å gi Claude akkurat nok tilgang til å være nyttig, og ikke mer.
 graph TD
     host["Host<br/>./dev.sh · ./gradle.sh"]
 
-    host -->|"./dev.sh"| dev["dev-runner<br/>JDK 25 · Claude Code CLI · gh CLI · git<br/>Nettverk: ✓ GitHub · ✓ Anthropic · ✗ alt annet"]
-    host -->|"./gradle.sh"| gradle["gradle-runner<br/>JDK 25<br/>Nettverk: ubegrenset"]
+    host -->|"./dev.sh"| dev["<b>dev-runner</b><br/><br/>JDK 25 · Claude Code CLI<br/>gh CLI<br/>git<br/><br/>Nettverk:<br/>  ✓ GitHub<br/>  ✓ Anthropic<br/>  ✗ alt annet"]
+    host -->|"./gradle.sh"| gradle["<b>gradle-runner</b><br/><br/>JDK 25<br/>Nettverk: ubegrenset"]
 
     gradle --- repos
     gradle --- gcache

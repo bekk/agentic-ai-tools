@@ -7,12 +7,12 @@ ENV_FILE="$SCRIPT_DIR/.env"
 CONTAINER="gradle-runner"
 
 # Load port defaults (mirrors compose.yaml defaults)
-GRADLE_PORT_1="${GRADLE_PORT_1:-8082}"
-GRADLE_PORT_2="${GRADLE_PORT_2:-8083}"
+GRADLE_PORT_1="${GRADLE_PORT_1:-8080}"
+GRADLE_PORT_2="${GRADLE_PORT_2:-8081}"
 if [ -f "$ENV_FILE" ]; then
   export $(grep -E '^GRADLE_PORT_' "$ENV_FILE" | xargs 2>/dev/null) 2>/dev/null || true
-  GRADLE_PORT_1="${GRADLE_PORT_1:-8082}"
-  GRADLE_PORT_2="${GRADLE_PORT_2:-8083}"
+  GRADLE_PORT_1="${GRADLE_PORT_1:-8080}"
+  GRADLE_PORT_2="${GRADLE_PORT_2:-8081}"
 fi
 
 ENV_FILE_ARG=""

@@ -117,33 +117,29 @@ Kopier `.env.example` til `.env` ved siden av `compose.yaml`:
 GIT_AUTHOR_NAME=Ditt Navn
 GIT_AUTHOR_EMAIL=deg@eksempel.no
 
-# Valgfritt: porter eksponert av dev-runner (standardverdi: 8080, 8081)
-DEV_PORT_1=8080
-DEV_PORT_2=8081
-
-# Valgfritt: porter eksponert av gradle-runner (standardverdi: 8082, 8083)
-GRADLE_PORT_1=8082
-GRADLE_PORT_2=8083
+# Valgfritt: porter eksponert av gradle-runner (standardverdi: 8080, 8081)
+GRADLE_PORT_1=8080
+GRADLE_PORT_2=8081
 ```
 
 `.env` er valgfritt — standardverdiene brukes hvis filen mangler.
 
 ### Portmapping
 
-| Variabel | Vertsport (standard) | Containerport | Container |
-|----------|----------------------|---------------|-----------|
-| `DEV_PORT_1` | 8080 | 8080 | dev-runner |
-| `DEV_PORT_2` | 8081 | 8081 | dev-runner |
-| `GRADLE_PORT_1` | 8082 | 8080 | gradle-runner |
-| `GRADLE_PORT_2` | 8083 | 8081 | gradle-runner |
+`dev-runner` eksponerer ingen porter — Claude trenger ikke å nås utenfra. `gradle-runner` eksponerer porter for applikasjoner som kjøres der:
 
-`dev-runner` og `gradle-runner` bruker samme interne porter (8080/8081), men eksponeres på ulike vertsporter slik at begge kan kjøre samtidig. En app som lytter på port 8080 i gradle-containeren nås på `localhost:8082` fra verten.
+| Variabel | Vertsport (standard) | Containerport |
+|----------|----------------------|---------------|
+| `GRADLE_PORT_1` | 8080 | 8080 |
+| `GRADLE_PORT_2` | 8081 | 8081 |
 
-Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at en container allerede kjører, må du fjerne den først:
+En app som lytter på port 8080 inne i gradle-containeren nås på `localhost:8080` fra verten.
+
+Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at `gradle-runner` allerede kjører, må du fjerne den først:
 
 ```sh
-docker rm -f dev-runner    # eller gradle-runner
-./dev.sh                   # eller ./gradle.sh
+docker rm -f gradle-runner
+./gradle.sh
 ```
 
 ---

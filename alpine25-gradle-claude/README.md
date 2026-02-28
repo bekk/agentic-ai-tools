@@ -68,9 +68,9 @@ Målet er å gi Claude akkurat nok tilgang til å være nyttig, og ikke mer.
 
 ```mermaid
 graph TD
-    host["Host<br/>./dev.sh · ./gradle.sh"]
+    host["<b>Host</b>"]
 
-    host -->|"./dev.sh"| dev["<b>dev-runner</b><br/><br/>JDK 25 · Claude Code CLI<br/>gh CLI<br/>git<br/><br/>Nettverk:<br/>  ✓ GitHub<br/>  ✓ Anthropic<br/>  ✗ alt annet"]
+    host -->|"./dev.sh"| dev["<b>dev-runner</b><br/><br/>JDK 25<br/>Claude Code CLI<br/>gh CLI<br/>git<br/><br/>Nettverk:<br/>  ✓ GitHub<br/>  ✓ Anthropic<br/>  ✗ alt annet"]
     host -->|"./gradle.sh"| gradle["<b>gradle-runner</b><br/><br/>JDK 25<br/>Nettverk: ubegrenset"]
 
     gradle --- repos

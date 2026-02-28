@@ -9,6 +9,8 @@ Utviklingsmiljøet består av to samarbeidende containere:
 
 Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med antakelsen om at Gradle brukes for bygging. 
 
+*Fortusetningen er at god kodepraksis er fulgt for repo'et, og at det enten er eller kunne ha vært public*
+
 ---
 
 ## Hurtigstart

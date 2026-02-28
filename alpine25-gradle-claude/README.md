@@ -39,14 +39,22 @@ claude
 For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 
 ```sh
+# 7. Start gradle-containeren i riktig repo og kjør bygg
 ./gradle.sh "cd <repo> && ./gradlew build"
 ```
 
 Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (gradle-runner) når avhengigheter endres, siden dev-runner har begrenset nettverkstilgang.
 
 ```sh
-# 7. Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
+# 8. [I dev-containeren] Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
 (claude)> build it
+
+# 9a. [I gradle-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
+./gradlew bootRun  # Hvis Spring Boot benyttes
+
+# 9b. [I dev-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
+(claude)> /exit
+./gradlew bootRun  # Hvis Spring Boot benyttes
 ```
 
 ---

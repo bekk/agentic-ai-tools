@@ -1,8 +1,8 @@
-# alpine25-gradle-claude
+# Nedlåst utviklingscontainer for agent-støttet utvikling (Java 25, Gradle, GitHub og Claude)
 
 > **Repo:** https://github.com/bekk/agentic-ai-tools
 
-Portabel og nedlåst utviklingscontainer for Kotlin/JVM/Gradle-prosjekter med Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
+Portabel og nedlåst utviklingscontainer for Javs 25, GitHub og Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med antakelsen om at Gradle brukes for bygging
 
 ---
 
@@ -44,7 +44,7 @@ For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (gradle-runner) når avhengigheter endres, siden dev-runner har begrenset nettverkstilgang.
 
 ```sh
-# 7. Få Claude til å bygge repo'et (når avhengigheter ikke endres, eller bruk gradle-containeren)
+# 7. Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
 (claude)> build it
 ```
 

@@ -35,7 +35,7 @@ gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og
 gh repo clone <org>/<repo>
 cd <repo>
 
-# 6. [I dev-container] Klon ditt repo og start Claude
+# 6. [I dev-container] Start Claude
 claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake)
 ```
 

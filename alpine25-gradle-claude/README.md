@@ -41,6 +41,14 @@ For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 ./gradle.sh "cd <repo> && ./gradlew build"
 ```
 
+Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (gradle-runner) når avhengigheter endres, siden dev-runner har begrenset nettverkstilgang.
+
+```sh
+# 7. Alternativt: kjør ./gradlew direkte i dev-containeren
+#    Fungerer så lenge avhengigheter og gradle-konfig ikke er endret
+./dev.sh "cd <repo> && ./gradlew test"
+```
+
 ---
 
 ## Motivasjon
@@ -59,36 +67,19 @@ Målet er å gi Claude akkurat nok tilgang til å være nyttig, og ikke mer.
 
 ## Arkitektur
 
-```
-┌─ Host ──────────────────────────────────────────────────────────────┐
-│                                                                      │
-│   ./dev.sh                                   ./gradle.sh            │
-└───────┬──────────────────────────────────────────────┬──────────────┘
-        │                                              │
-        ▼                                              ▼
-┌───────────────────────┐              ┌───────────────────────────┐
-│      dev-runner        │              │       gradle-runner        │
-│                        │              │                            │
-│  Claude Code CLI        │              │  JDK 25                    │
-│  gh CLI                │              │                            │
-│  git                   │              │  Nettverk: ubegrenset      │
-│                        │              │                            │
-│  Nettverk:             │              └──────────────┬─────────────┘
-│  ✓ GitHub (alle CIDR)  │                             │
-│  ✓ Anthropic           │                 ┌───────────┘
-│  ✗ alt annet           │                 │
-└────────────┬───────────┘                 │
-             │                             │
-             └─────────────┬───────────────┘
-                           │
-               ┌───────────▼────────────┐
-               │     Docker-volumer      │
-               │                        │
-               │  repos                 │  ← begge containere
-               │  gradle-cache          │  ← begge containere
-               │  gh-auth               │  ← dev-runner
-               │  claude-auth           │  ← dev-runner
-               └────────────────────────┘
+```mermaid
+graph TD
+    host["Host<br/>./dev.sh · ./gradle.sh"]
+
+    host -->|"./dev.sh"| dev["dev-runner<br/>JDK 25 · Claude Code CLI · gh CLI · git<br/>Nettverk: ✓ GitHub · ✓ Anthropic · ✗ alt annet"]
+    host -->|"./gradle.sh"| gradle["gradle-runner<br/>JDK 25<br/>Nettverk: ubegrenset"]
+
+    dev --- repos[("repos")]
+    dev --- gcache[("gradle-cache")]
+    dev --- ghauth[("gh-auth")]
+    dev --- clauth[("claude-auth")]
+    gradle --- repos
+    gradle --- gcache
 ```
 
 Nettverksbegrensningen i `dev-runner` settes opp ved oppstart via iptables: GitHubs publiserte IP-blokker hentes fra `api.github.com/meta`, Anthropics endepunkter løses via DNS, deretter blokkeres all annen utgående trafikk.
@@ -97,7 +88,16 @@ Nettverksbegrensningen i `dev-runner` settes opp ved oppstart via iptables: GitH
 
 ## Persistens
 
-Autentisering mot GitHub og Claude gjøres én gang og bevares på tvers av omstarter via Docker-volumer.
+Alle data som skal overleve en container-omstart lagres i Docker-volumer:
+
+| Volum | Montert i | Innhold |
+|-------|-----------|---------|
+| `repos` | begge | Klonede repoer (`/repos`) |
+| `gradle-cache` | begge | Gradle-cache (`~/.gradle`) — holder daemonen varm |
+| `gh-auth` | dev-runner | GitHub-legitimasjon (`~/.config/gh`) |
+| `claude-auth` | dev-runner | Claude-legitimasjon (`~/.claude`) |
+
+`gh` og Claude trenger bare autentiseres én gang — legitimasjonen bevares mellom omstarter.
 
 ---
 

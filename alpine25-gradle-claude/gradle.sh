@@ -27,7 +27,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
 else
   BOUND=$(docker port "$CONTAINER" 2>/dev/null || true)
   for PORT in "$GRADLE_PORT_1" "$GRADLE_PORT_2"; do
-    if ! echo "$BOUND" | grep -q "${PORT}/tcp"; then
+    if ! echo "$BOUND" | grep -q ":${PORT}$"; then
       echo "[gradle] ERROR: Port $PORT is not bound on the running container."
       echo "[gradle] Port mappings are set at creation time. To apply new config:"
       echo "[gradle]   docker rm -f $CONTAINER"

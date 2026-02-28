@@ -22,7 +22,7 @@ ENV_FILE_ARG=""
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
   echo "[dev] Starting persistent container..."
   docker-compose $ENV_FILE_ARG -f "$COMPOSE_FILE" run \
-    -d --name "$CONTAINER" dev sleep infinity > /dev/null
+    --service-ports -d --name "$CONTAINER" dev sleep infinity > /dev/null
   echo "[dev] Container ready (ports: $DEV_PORT_1, $DEV_PORT_2)."
 else
   BOUND=$(docker port "$CONTAINER" 2>/dev/null || true)

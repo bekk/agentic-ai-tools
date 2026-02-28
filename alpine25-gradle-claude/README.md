@@ -3,7 +3,11 @@
 
 > **Repo:** https://github.com/bekk/agentic-ai-tools
 
-Portabel og nedlåst utviklingscontainer for Javs 25, GitHub og Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med antakelsen om at Gradle brukes for bygging
+Utviklingsmiljøet består av to samarbeidende containere:
+1. Nedlåst dev-container for Java 25, GitHub og Claude Code.
+2. Åpen gradle-container for Java 25 og Gradle. Brukes til å laste ned avhengigheter og kjøre opp app
+
+Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer – med antakelsen om at Gradle brukes for bygging. 
 
 ---
 
@@ -49,11 +53,7 @@ Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint di
 # 8. [I dev-containeren] Få Claude til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
 (claude)> build it
 
-# 9a. [I gradle-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
-./gradlew bootRun  # Hvis Spring Boot benyttes
-
-# 9b. [I dev-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
-(claude)> /exit
+# 9. [I gradle-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
 ./gradlew bootRun  # Hvis Spring Boot benyttes
 ```
 

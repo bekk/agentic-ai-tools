@@ -26,8 +26,8 @@ docker-compose build
 ./dev.sh
 
 # 5. Første gang: autentiser gh og Claude
-gh auth login
-claude  # følg instruksjonene for å koble til API-nøkkel
+gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser 
+claude  # følg instruksjonene for å koble til API-nøkkel (nettleser kan ikke åpnes, så url må kopieres til nettleser og token limes tilbake
 
 # 6. Klon ditt repo og start Claude
 gh repo clone <org>/<repo>

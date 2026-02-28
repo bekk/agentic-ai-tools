@@ -126,7 +126,20 @@ GRADLE_PORT_1=8082
 GRADLE_PORT_2=8083
 ```
 
-`.env` er valgfritt — standardverdiene brukes hvis filen mangler. Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at en container allerede kjører, må du fjerne den først:
+`.env` er valgfritt — standardverdiene brukes hvis filen mangler.
+
+### Portmapping
+
+| Variabel | Vertsport (standard) | Containerport | Container |
+|----------|----------------------|---------------|-----------|
+| `DEV_PORT_1` | 8080 | 8080 | dev-runner |
+| `DEV_PORT_2` | 8081 | 8081 | dev-runner |
+| `GRADLE_PORT_1` | 8082 | 8080 | gradle-runner |
+| `GRADLE_PORT_2` | 8083 | 8081 | gradle-runner |
+
+`dev-runner` og `gradle-runner` bruker samme interne porter (8080/8081), men eksponeres på ulike vertsporter slik at begge kan kjøre samtidig. En app som lytter på port 8080 i gradle-containeren nås på `localhost:8082` fra verten.
+
+Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at en container allerede kjører, må du fjerne den først:
 
 ```sh
 docker rm -f dev-runner    # eller gradle-runner

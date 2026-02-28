@@ -1,5 +1,7 @@
 # Frittstående dev-container (Kotlin/JVM/Gradle + Claude)
 
+> **Repo:** https://github.com/bekk/agentic-ai-tools
+
 En portabel dev-container som fungerer for ethvert Kotlin/JVM/Gradle-prosjekt. Alle verktøy er bakt inn i imaget; prosjektet ditt klones inn i et navngitt Docker-volum ved oppstart. Ingen prosjektkode er bakt inn, så imaget kan gjenbrukes for ethvert repo.
 
 ## Innhold

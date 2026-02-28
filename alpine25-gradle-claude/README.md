@@ -1,105 +1,113 @@
-# Frittstående dev-container (Kotlin/JVM/Gradle + Claude)
+# alpine25-gradle-claude
 
 > **Repo:** https://github.com/bekk/agentic-ai-tools
 
-En portabel dev-container som fungerer for ethvert Kotlin/JVM/Gradle-prosjekt. Alle verktøy er bakt inn i imaget; prosjektet ditt klones inn i et navngitt Docker-volum ved oppstart. Ingen prosjektkode er bakt inn, så imaget kan gjenbrukes for ethvert repo.
+Portabel dev-container for Kotlin/JVM/Gradle-prosjekter med Claude Code. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
 
-## Innhold
+---
 
-- JDK 25 (`eclipse-temurin:25-alpine`)
-- `bash`, `curl`, `git`, `iptables`
-- `gh` (GitHub CLI)
-- `node` / `npm`
-- `claude` (Claude Code CLI via `@anthropic-ai/claude-code`)
+## Hurtigstart
 
-Ingen Gradle-binary — hvert prosjekt bruker sin egen `./gradlew`.
-
-## Nettverkspolicy
-
-Etter første oppstart begrenses utgående trafikk til **GitHub og Anthropic** via iptables. Alt annet blokkeres. Krever `--cap-add=NET_ADMIN` (satt i `compose.yaml`).
-
-Gradle-bygg kjøres i den separate `gradle`-tjenesten som har ubegrenset nettverkstilgang. Gradle-cachen deles mellom begge tjenestene via et navngitt volum.
-
-DNS (port 53) er alltid tillatt slik at `gh` og `claude` kan slå opp vertsnavn ved kjøring.
-
-## Kom i gang
-
-### 1. Bygg imaget
+Forutsetninger: Docker, `docker-compose`
 
 ```sh
-docker-compose -f alpine25-gradle-claude/compose.yaml build
-```
+# 1. Klon og gå inn i katalogen
+git clone https://github.com/bekk/agentic-ai-tools.git
+cd agentic-ai-tools/alpine25-gradle-claude
 
-### 2. Start et interaktivt skall
+# 2. Sett git-identitet
+cp .env.example .env
+# Rediger .env med navn og e-post
 
-```sh
-docker-compose -f alpine25-gradle-claude/compose.yaml run dev
-```
+# 3. Bygg imaget (én gang)
+docker-compose build
 
-Nettverket begrenses til GitHub + Anthropic ved oppstart. Gradle-cache leses fra `~/.gradle` på verten.
+# 4. Start dev-containeren
+./dev.sh
 
-### 3. Autentisering
+# 5. Første gang: autentiser gh og Claude
+gh auth login
+claude  # følg instruksjonene for å koble til API-nøkkel
 
-**Claude:** legitimasjon leses fra `~/.claude` på vertsmaskinen (bind-mountet inn i containeren). Ingen oppsett nødvendig hvis du allerede er innlogget lokalt.
-
-**GitHub:** kjør `gh auth login` inne i containeren ved første gangs bruk. Legitimasjon lagres i `gh-auth`-volumet og bevares på tvers av omstarter.
-
-### 4. Klon et repo og begynn å jobbe
-
-```sh
-gh repo fork kartverket/backstage-plugin-risk-scorecard-backend --clone
-cd backstage-plugin-risk-scorecard-backend
-git checkout -b min-feature
+# 6. Klon ditt repo og start Claude
+gh repo clone <org>/<repo>
+cd <repo>
 claude
 ```
 
-### 5. Bygg prosjektet (gradle-tjeneste)
-
-Kjør Gradle-bygg i den ubegrensede `gradle`-tjenesten via `gradle.sh`. Containeren kjører
-persistent slik at Gradle-daemonen forblir varm mellom bygg:
+For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 
 ```sh
-# Åpne et skall i gradle-containeren (starter den hvis den ikke kjører)
-./alpine25-gradle-claude/gradle.sh
-
-# Eller kjør en enkelt kommando direkte
-./alpine25-gradle-claude/gradle.sh "cd backstage-plugin-risk-scorecard-backend && ./gradlew build"
+./gradle.sh "cd <repo> && ./gradlew build"
 ```
 
-### 6. Åpne en PR (dev-tjeneste)
+---
 
-```sh
-git add -p && git commit -m "feat: min endring"
-git push -u origin min-feature
-gh pr create --fill
-```
+## Innhold
 
-## Starte en eksisterende container på nytt
+| Verktøy | Versjon |
+|---------|---------|
+| JDK | 25 (eclipse-temurin) |
+| Claude Code CLI | siste (`@anthropic-ai/claude-code`) |
+| GitHub CLI (`gh`) | siste (Alpine edge) |
+| `git`, `bash`, `curl` | Alpine |
 
-Uten `--rm` bevares containeren etter `exit`. For å gå inn igjen:
+Ingen Gradle-binary — hvert prosjekt bruker sin egen `./gradlew`.
 
-```sh
-docker-compose -f alpine25-gradle-claude/compose.yaml start
-docker-compose -f alpine25-gradle-claude/compose.yaml exec dev bash
-```
+---
+
+## Arkitektur
+
+To containere, ett delt repo-volum:
+
+**`dev` (dev-runner)**
+- Claude Code, gh CLI, git
+- Nettverkstilgang begrenset til GitHub og Anthropic via iptables
+- Startes persistent med `dev.sh`
+
+**`gradle` (gradle-runner)**
+- Ren JDK 25, ubegrenset nettverkstilgang (nødvendig for nedlasting av avhengigheter)
+- Deler `repos`- og `gradle-cache`-volum med dev-containeren
+- Startes persistent med `gradle.sh`
+
+### Nettverkspolicy (dev-containeren)
+
+Ved oppstart hentes GitHubs publiserte IP-blokker fra `api.github.com/meta` og legges inn i iptables. Anthropic-endepunkter løses via DNS. Alt annet utgående trafikk blokkeres. Krever `--cap-add=NET_ADMIN`.
+
+---
+
+## Persistens
+
+Alle data lagres i navngitte Docker-volumer:
+
+| Volum | Innhold |
+|-------|---------|
+| `repos` | Klonede repoer |
+| `gradle-cache` | Gradle-cache (`~/.gradle`) |
+| `gh-auth` | GitHub-legitimasjon |
+| `claude-auth` | Claude-legitimasjon |
+
+Autentisering mot GitHub og Claude gjøres én gang og bevares på tvers av omstarter.
+
+---
 
 ## Miljøvariabler
 
-Kopier `.env.example` til `.env` ved siden av `compose.yaml` og fyll inn verdiene:
+Kopier `.env.example` til `.env` ved siden av `compose.yaml`:
 
 ```sh
 GIT_AUTHOR_NAME=Ditt Navn
 GIT_AUTHOR_EMAIL=deg@eksempel.no
 ```
 
-## Sjekkliste for verifisering
+---
+
+## Verifisering
 
 | Sjekk | Kommando | Forventet |
 |-------|----------|-----------|
-| Claude Code tilgjengelig | `claude --version` | Skriver ut versjon |
-| gh CLI tilgjengelig | `gh --version` | Skriver ut versjon |
-| git fungerer | `git log --oneline -3` | Viser nylige commits |
-| Gradle fungerer | `./gradlew build -x test` | Lykkes |
-| Nettverk blokkert | `curl -s --max-time 3 https://example.com` | Timeout |
+| Claude Code | `claude --version` | Skriver ut versjon |
+| GitHub CLI | `gh --version` | Skriver ut versjon |
+| Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Timeout |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Anthropic nåbar | API-kall via `claude` | Fungerer |

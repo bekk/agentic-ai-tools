@@ -16,6 +16,8 @@ Ingen Gradle-binary — hvert prosjekt bruker sin egen `./gradlew`.
 
 Etter første oppstart begrenses utgående trafikk til **GitHub og Anthropic** via iptables. Alt annet blokkeres. Krever `--cap-add=NET_ADMIN` (satt i `compose.yaml`).
 
+Gradle-bygg kjøres i den separate `gradle`-tjenesten som har ubegrenset nettverkstilgang. Gradle-cachen deles mellom begge tjenestene via et navngitt volum.
+
 DNS (port 53) er alltid tillatt slik at `gh` og `claude` kan slå opp vertsnavn ved kjøring.
 
 ## Kom i gang
@@ -32,8 +34,7 @@ docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml build
 docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml run dev
 ```
 
-- **Første kjøring**: Gradle-cache bootstrappes, deretter begrenses nettverket.
-- **Påfølgende kjøringer**: nettverket begrenses umiddelbart (kun GitHub + Anthropic).
+Nettverket begrenses til GitHub + Anthropic ved oppstart. Gradle-cache leses fra `~/.gradle` på verten.
 
 ### 3. Autentisering
 
@@ -50,10 +51,22 @@ git checkout -b min-feature
 claude
 ```
 
-### 5. Bygg og åpne en PR
+### 5. Bygg prosjektet (gradle-tjeneste)
+
+Kjør Gradle-bygg i den ubegrensede `gradle`-tjenesten via `gradle.sh`. Containeren kjører
+persistent slik at Gradle-daemonen forblir varm mellom bygg:
 
 ```sh
-./gradlew build -x test
+# Åpne et skall i gradle-containeren (starter den hvis den ikke kjører)
+./ecplipse-alpine-gradle-claude/gradle.sh
+
+# Eller kjør en enkelt kommando direkte
+./ecplipse-alpine-gradle-claude/gradle.sh "cd backstage-plugin-risk-scorecard-backend && ./gradlew build"
+```
+
+### 6. Åpne en PR (dev-tjeneste)
+
+```sh
 git add -p && git commit -m "feat: min endring"
 git push -u origin min-feature
 gh pr create --fill
@@ -66,20 +79,6 @@ Uten `--rm` bevares containeren etter `exit`. For å gå inn igjen:
 ```sh
 docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml start
 docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml exec dev bash
-```
-
-## Tilbakestille Gradle-cache
-
-Hvis `build.gradle.kts` endres betydelig (nye avhengigheter), slett cache-volumet så kjøres bootstrap på nytt ved neste oppstart:
-
-```sh
-docker volume rm ecplipse-alpine-gradle-claude_gradle-cache
-```
-
-Eller inne i containeren:
-
-```sh
-rm /root/.gradle/.bootstrapped
 ```
 
 ## Miljøvariabler
@@ -98,7 +97,7 @@ GIT_AUTHOR_EMAIL=deg@eksempel.no
 | Claude Code tilgjengelig | `claude --version` | Skriver ut versjon |
 | gh CLI tilgjengelig | `gh --version` | Skriver ut versjon |
 | git fungerer | `git log --oneline -3` | Viser nylige commits |
-| Gradle fungerer fra cache | `./gradlew build -x test` | Lykkes, ingen nedlastinger |
+| Gradle fungerer | `./gradlew build -x test` | Lykkes |
 | Nettverk blokkert | `curl -s --max-time 3 https://example.com` | Timeout |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Anthropic nåbar | API-kall via `claude` | Fungerer |

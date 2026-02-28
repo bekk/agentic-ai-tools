@@ -7,7 +7,7 @@ services:
       - repos:/repos
       - gradle-cache:/root/.gradle
       - gh-auth:/root/.config/gh
-      - ~/.claude:/root/.claude                # Claude credentials from host
+      - claude-auth:/root/.claude
     working_dir: /repos
     ports:
       - "8080:8080"
@@ -17,8 +17,19 @@ services:
       - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
       - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
       - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - BROWSER=/bin/echo
     cap_add:
       - NET_ADMIN
+    stdin_open: true
+    tty: true
+
+  gradle:
+    image: eclipse-temurin:25-alpine
+    volumes:
+      - repos:/repos
+      - gradle-cache:/root/.gradle
+    working_dir: /repos
+    entrypoint: /bin/sh
     stdin_open: true
     tty: true
 
@@ -26,3 +37,4 @@ volumes:
   repos:
   gradle-cache:
   gh-auth:
+  claude-auth:

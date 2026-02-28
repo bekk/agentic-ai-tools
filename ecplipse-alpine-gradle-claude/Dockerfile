@@ -13,7 +13,6 @@ RUN npm install -g @anthropic-ai/claude-code
 # Safe git directory for all repos
 RUN git config --global --add safe.directory '*'
 
-# Repos directory — mounted as a named volume at runtime
 RUN mkdir /repos
 
 WORKDIR /repos

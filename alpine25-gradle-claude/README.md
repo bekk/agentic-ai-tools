@@ -20,9 +20,9 @@ Forutsetninger: Docker, `docker-compose`
 git clone https://github.com/bekk/agentic-ai-tools.git
 cd agentic-ai-tools/alpine25-gradle-claude
 
-# 2. [På vertsmaskin] Sett git-identitet
+# 2. [På vertsmaskin] Sett git-identitet og eventuelt port-mapping
 cp .env.example .env
-# Rediger .env med navn og e-post
+# Rediger .env med navn, e-post og porter
 
 # 3. [På vertsmaskin] Bygg imaget (én gang)
 docker-compose build

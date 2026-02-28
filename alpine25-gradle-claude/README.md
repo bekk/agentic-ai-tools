@@ -30,7 +30,7 @@ docker-compose build
 # 4. [På vertsmaskin] Start dev-containeren
 ./dev.sh
 
-# 5. I dev-container] Første gang: autentiser gh og klon aktuelt repo med begrenset token
+# 5. [I dev-container] Første gang: autentiser gh og klon aktuelt repo med begrenset token
 gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser
 gh repo clone <org>/<repo>
 cd <repo>

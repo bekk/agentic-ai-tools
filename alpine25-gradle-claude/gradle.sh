@@ -2,12 +2,12 @@
 set -e
 
 COMPOSE_FILE="$(cd "$(dirname "$0")" && pwd)/compose.yaml"
-CONTAINER="ecplipse-gradle-runner"
+CONTAINER="gradle-runner"
 
 # Start persistent container if not already running
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
   echo "[gradle] Starting persistent container..."
-  docker-compose -f "$COMPOSE_FILE" run -d --name "$CONTAINER" gradle sleep infinity > /dev/null
+  docker-compose -f "$COMPOSE_FILE" run -d --name "$CONTAINER" gradle -c "sleep infinity" > /dev/null
   echo "[gradle] Container ready."
 fi
 

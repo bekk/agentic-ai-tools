@@ -25,13 +25,13 @@ DNS (port 53) er alltid tillatt slik at `gh` og `claude` kan slå opp vertsnavn 
 ### 1. Bygg imaget
 
 ```sh
-docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml build
+docker-compose -f alpine25-gradle-claude/compose.yaml build
 ```
 
 ### 2. Start et interaktivt skall
 
 ```sh
-docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml run dev
+docker-compose -f alpine25-gradle-claude/compose.yaml run dev
 ```
 
 Nettverket begrenses til GitHub + Anthropic ved oppstart. Gradle-cache leses fra `~/.gradle` på verten.
@@ -58,10 +58,10 @@ persistent slik at Gradle-daemonen forblir varm mellom bygg:
 
 ```sh
 # Åpne et skall i gradle-containeren (starter den hvis den ikke kjører)
-./ecplipse-alpine-gradle-claude/gradle.sh
+./alpine25-gradle-claude/gradle.sh
 
 # Eller kjør en enkelt kommando direkte
-./ecplipse-alpine-gradle-claude/gradle.sh "cd backstage-plugin-risk-scorecard-backend && ./gradlew build"
+./alpine25-gradle-claude/gradle.sh "cd backstage-plugin-risk-scorecard-backend && ./gradlew build"
 ```
 
 ### 6. Åpne en PR (dev-tjeneste)
@@ -77,8 +77,8 @@ gh pr create --fill
 Uten `--rm` bevares containeren etter `exit`. For å gå inn igjen:
 
 ```sh
-docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml start
-docker-compose -f ecplipse-alpine-gradle-claude/compose.yaml exec dev bash
+docker-compose -f alpine25-gradle-claude/compose.yaml start
+docker-compose -f alpine25-gradle-claude/compose.yaml exec dev bash
 ```
 
 ## Miljøvariabler

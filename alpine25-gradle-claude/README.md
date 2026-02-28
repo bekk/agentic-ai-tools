@@ -43,51 +43,61 @@ For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
 
 ---
 
-## Innhold
+## Motivasjon
 
-| Verktøy | Versjon |
-|---------|---------|
-| JDK | 25 (eclipse-temurin) |
-| Claude Code CLI | siste (`@anthropic-ai/claude-code`) |
-| GitHub CLI (`gh`) | siste (Alpine edge) |
-| `git`, `bash`, `curl` | Alpine |
+Claude Code er et kraftig verktøy: det kan lese og skrive filer, kjøre shell-kommandoer og utføre git-operasjoner autonomt. I et agentisk arbeidsflyt øker dette risikoen for utilsiktet datalekkasje, uønskede nettverkskall eller avhengigheter som hentes fra ukjente kilder.
 
-Ingen Gradle-binary — hvert prosjekt bruker sin egen `./gradlew`.
+Dette oppsettet begrenser Claude til et strengt kontrollert miljø:
+
+- **Nettverkstilgang** er begrenset til GitHub og Anthropic — Claude kan jobbe med kode og kommunisere med API-et sitt, men ikke nå ut til vilkårlige internett-ressurser.
+- **Gradle-bygg** kjøres i en separat container uten nettverksbegrensning, siden nedlasting av avhengigheter fra Maven Central og lignende er nødvendig og forventet.
+- **Legitimasjon** (GitHub, Claude) lagres i Docker-volumer og eksponeres ikke utenfor container-miljøet.
+
+Målet er å gi Claude akkurat nok tilgang til å være nyttig, og ikke mer.
 
 ---
 
 ## Arkitektur
 
-To containere, ett delt repo-volum:
+```
+┌─ Host ──────────────────────────────────────────────────────────────┐
+│                                                                      │
+│   ./dev.sh                                   ./gradle.sh            │
+└───────┬──────────────────────────────────────────────┬──────────────┘
+        │                                              │
+        ▼                                              ▼
+┌───────────────────────┐              ┌───────────────────────────┐
+│      dev-runner        │              │       gradle-runner        │
+│                        │              │                            │
+│  Claude Code CLI        │              │  JDK 25                    │
+│  gh CLI                │              │                            │
+│  git                   │              │  Nettverk: ubegrenset      │
+│                        │              │                            │
+│  Nettverk:             │              └──────────────┬─────────────┘
+│  ✓ GitHub (alle CIDR)  │                             │
+│  ✓ Anthropic           │                 ┌───────────┘
+│  ✗ alt annet           │                 │
+└────────────┬───────────┘                 │
+             │                             │
+             └─────────────┬───────────────┘
+                           │
+               ┌───────────▼────────────┐
+               │     Docker-volumer      │
+               │                        │
+               │  repos                 │  ← begge containere
+               │  gradle-cache          │  ← begge containere
+               │  gh-auth               │  ← dev-runner
+               │  claude-auth           │  ← dev-runner
+               └────────────────────────┘
+```
 
-**`dev` (dev-runner)**
-- Claude Code, gh CLI, git
-- Nettverkstilgang begrenset til GitHub og Anthropic via iptables
-- Startes persistent med `dev.sh`
-
-**`gradle` (gradle-runner)**
-- Ren JDK 25, ubegrenset nettverkstilgang (nødvendig for nedlasting av avhengigheter)
-- Deler `repos`- og `gradle-cache`-volum med dev-containeren
-- Startes persistent med `gradle.sh`
-
-### Nettverkspolicy (dev-containeren)
-
-Ved oppstart hentes GitHubs publiserte IP-blokker fra `api.github.com/meta` og legges inn i iptables. Anthropic-endepunkter løses via DNS. Alt annet utgående trafikk blokkeres. Krever `--cap-add=NET_ADMIN`.
+Nettverksbegrensningen i `dev-runner` settes opp ved oppstart via iptables: GitHubs publiserte IP-blokker hentes fra `api.github.com/meta`, Anthropics endepunkter løses via DNS, deretter blokkeres all annen utgående trafikk.
 
 ---
 
 ## Persistens
 
-Alle data lagres i navngitte Docker-volumer:
-
-| Volum | Innhold |
-|-------|---------|
-| `repos` | Klonede repoer |
-| `gradle-cache` | Gradle-cache (`~/.gradle`) |
-| `gh-auth` | GitHub-legitimasjon |
-| `claude-auth` | Claude-legitimasjon |
-
-Autentisering mot GitHub og Claude gjøres én gang og bevares på tvers av omstarter.
+Autentisering mot GitHub og Claude gjøres én gang og bevares på tvers av omstarter via Docker-volumer.
 
 ---
 
@@ -102,7 +112,7 @@ GIT_AUTHOR_EMAIL=deg@eksempel.no
 
 ---
 
-## Verifisering
+## Verifisering av Dev-containeren
 
 | Sjekk | Kommando | Forventet |
 |-------|----------|-----------|

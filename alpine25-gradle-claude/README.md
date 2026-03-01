@@ -37,6 +37,7 @@ claude
 (claude)> build it
 
 # 8. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
+(claude)> /exit
 ./gradlew bootRun  # Hvis Spring Boot benyttes
 ```
 

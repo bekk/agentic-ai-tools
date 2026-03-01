@@ -1,0 +1,22 @@
+services:
+  dev:
+    working_dir: /repos
+    environment:
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - HTTP_PROXY=http://dev-proxy:3128
+      - HTTPS_PROXY=http://dev-proxy:3128
+      - http_proxy=http://dev-proxy:3128
+      - https_proxy=http://dev-proxy:3128
+      - NO_PROXY=localhost,127.0.0.1
+      - no_proxy=localhost,127.0.0.1
+      - GRADLE_OPTS=-Dhttps.proxyHost=dev-proxy -Dhttps.proxyPort=3128 -Dhttp.proxyHost=dev-proxy -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=localhost|127.0.0.1
+    ports:
+      - "${GRADLE_PORT_1:-8080}:8080"
+      - "${GRADLE_PORT_2:-8081}:8081"
+    networks:
+      - proxy-net
+    stdin_open: true
+    tty: true

@@ -20,10 +20,11 @@ cd agentic-ai-tools/alpine25-gradle-opencode
 cp .env.example .env
 # Rediger .env med navn, e-post og ANTHROPIC_API_KEY
 
-# 3. Bygg imaget (én gang)
+# 3. Bygg imagene (én gang)
+docker-compose -f ../shared/compose-proxy.yaml build
 docker-compose build
 
-# 4. Start dev-containeren (starter proxy-containeren automatisk)
+# 4. Start dev-containeren (starter delt proxy automatisk)
 ./dev.sh
 
 # 5. Første gang: autentiser gh
@@ -66,7 +67,7 @@ graph TD
     host["<b>Host</b>"]
 
     host -->|"./dev.sh"| dev["<b>opencode-dev</b><br/><br/>JDK 25<br/>opencode CLI<br/>gh CLI<br/>git"]
-    host -->|"(automatisk)"| proxy["<b>opencode-proxy</b><br/><br/>Squid<br/>domene-whitelist<br/><br/>✓ *.anthropic.com<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
+    host -->|"(automatisk, delt)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/>domene-whitelist<br/><br/>✓ *.anthropic.com<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
     dev -->|"HTTPS_PROXY"| proxy
     proxy --> internet["internett"]
 
@@ -76,7 +77,7 @@ graph TD
     dev --- occonfig[("opencode-config")]
 ```
 
-Nettverksisolasjon oppnås via Docker-nettverk: `opencode-dev` er kun koblet til et internt nettverk uten internett-ruting. All utgående trafikk går gjennom `opencode-proxy` (Squid), som tillater kun domener listet i `proxy/whitelist.conf`. Filtrering skjer på domenenavn — ikke IP-adresser — og fungerer derfor uavhengig av CDN-rotasjon.
+Nettverksisolasjon oppnås via Docker-nettverk: `opencode-dev` er kun koblet til det interne nettverket `proxy-net` uten direkte internett-ruting. All utgående trafikk går gjennom den delte `dev-proxy` (Squid), som tillater kun domener listet i `shared/whitelist.conf`. Filtrering skjer på domenenavn — ikke IP-adresser — og fungerer derfor uavhengig av CDN-rotasjon.
 
 ---
 
@@ -97,7 +98,7 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `whitelist.conf`:
+Tillatte domener er definert i `../shared/whitelist.conf` (superset for alle dev-containere):
 
 ```
 .anthropic.com
@@ -108,8 +109,11 @@ Tillatte domener er definert i `whitelist.conf`:
 repo1.maven.org
 repo.maven.apache.org
 
-# Gradle (alle subdomener: plugins, downloads, services, plugins-artifacts, osv.)
-.gradle.org
+# Gradle
+services.gradle.org
+plugins.gradle.org
+plugins-artifacts.gradle.org
+downloads.gradle.org
 ```
 
 ### Legge til et nytt domene
@@ -117,14 +121,14 @@ repo.maven.apache.org
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> whitelist.conf
-docker exec opencode-proxy squid -k reconfigure
+echo ".nyttdomene.com" >> ../shared/whitelist.conf
+docker exec dev-proxy squid -k reconfigure
 ```
 
 ### Se hva som blokkeres
 
 ```sh
-docker logs opencode-proxy | grep DENIED
+docker logs dev-proxy | grep DENIED
 ```
 
 Eksempel på output:
@@ -182,4 +186,4 @@ docker rm -f opencode-dev
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Feil (blokkert av proxy) |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Anthropic nåbar | API-kall via `opencode` | Fungerer |
-| Proxy-logg | `docker logs opencode-proxy \| grep DENIED` | Viser blokkerte forsøk |
+| Proxy-logg | `docker logs dev-proxy \| grep DENIED` | Viser blokkerte forsøk |

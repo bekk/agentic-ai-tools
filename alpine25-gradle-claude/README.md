@@ -23,9 +23,10 @@ cp .env.example .env
 # Rediger .env med navn, e-post og porter
 
 # 3. [På vertsmaskin] Bygg imagene (én gang)
+docker-compose -f ../shared/compose-proxy.yaml build
 docker-compose build
 
-# 4. [På vertsmaskin] Start dev-containeren
+# 4. [På vertsmaskin] Start dev-containeren (starter delt proxy automatisk)
 ./dev.sh
 
 # 5. [I dev-container] Første gang: autentiser gh og Claude
@@ -68,7 +69,7 @@ graph TD
     host["<b>Vertsmaskin</b>"]
 
     host -->|"./dev.sh"| dev["<b>claude-dev</b><br/><br/>JDK 25<br/>Claude Code CLI<br/>gh CLI<br/>git"]
-    host -->|"(automatisk)"| proxy["<b>claude-proxy</b><br/><br/>Squid<br/><br/>Tillatte domener:<br/>✓ *.anthropic.com<br/>✓ claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
+    host -->|"(automatisk, delt)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>Tillatte domener:<br/>✓ *.anthropic.com<br/>✓ claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
 
     dev -->|"HTTP_PROXY :3128"| proxy
     proxy -->|"internett"| internet["Internett"]
@@ -79,16 +80,17 @@ graph TD
     dev --- clauth[("claude-auth")]
 ```
 
-`claude-dev` er koblet kun til det interne nettverket `dev-internal`. `claude-proxy` er bro mellom det interne nettverket og internett, og slipper kun gjennom domener på whitelisten.
+`claude-dev` er koblet kun til det interne nettverket `proxy-net`. `dev-proxy` er en delt proxy som brukes av alle dev-containere — den er bro mellom det interne nettverket og internett, og slipper kun gjennom domener på whitelisten.
 
 ---
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `whitelist.conf`:
+Tillatte domener er definert i `../shared/whitelist.conf` (superset for alle dev-containere):
 
 ```
 .anthropic.com
+.claude.com
 claude.ai
 .github.com
 .githubusercontent.com
@@ -97,8 +99,11 @@ claude.ai
 repo1.maven.org
 repo.maven.apache.org
 
-# Gradle (alle subdomener: plugins, downloads, services, plugins-artifacts, osv.)
-.gradle.org
+# Gradle
+services.gradle.org
+plugins.gradle.org
+plugins-artifacts.gradle.org
+downloads.gradle.org
 ```
 
 ### Legge til et nytt domene
@@ -106,14 +111,14 @@ repo.maven.apache.org
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> whitelist.conf
-docker exec claude-proxy squid -k reconfigure
+echo ".nyttdomene.com" >> ../shared/whitelist.conf
+docker exec dev-proxy squid -k reconfigure
 ```
 
 ### Se hva som blokkeres
 
 ```sh
-docker logs claude-proxy | grep DENIED
+docker logs dev-proxy | grep DENIED
 ```
 
 ---
@@ -178,4 +183,4 @@ docker rm -f claude-dev
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Blokkert av proxy |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Anthropic nåbar | API-kall via `claude` | Fungerer |
-| Proxy-logger | `docker logs claude-proxy \| grep DENIED` | Viser blokkerte forsøk |
+| Proxy-logger | `docker logs dev-proxy \| grep DENIED` | Viser blokkerte forsøk |

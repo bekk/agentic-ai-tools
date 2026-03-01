@@ -1,7 +1,6 @@
 FROM alpine:3
 RUN apk add --no-cache squid
 COPY squid.conf /etc/squid/squid.conf
-COPY whitelist.conf /etc/squid/whitelist.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 EXPOSE 3128

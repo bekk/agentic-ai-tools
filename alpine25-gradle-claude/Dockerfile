@@ -2,7 +2,7 @@ FROM eclipse-temurin:25-alpine
 
 # System tools
 RUN apk upgrade --no-cache \
- && apk add --no-cache bash curl git iptables nodejs npm \
+ && apk add --no-cache bash curl git nodejs npm \
  && apk add --no-cache \
       --repository https://dl-cdn.alpinelinux.org/alpine/edge/community \
       github-cli

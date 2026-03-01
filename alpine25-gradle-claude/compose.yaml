@@ -1,4 +1,16 @@
 services:
+  proxy:
+    build:
+      context: ../proxy
+      dockerfile: Dockerfile
+    volumes:
+      - ./whitelist.conf:/etc/squid/whitelist.conf:ro
+    container_name: claude-proxy
+    networks:
+      - default
+      - dev-internal
+    restart: unless-stopped
+
   dev:
     build:
       context: .
@@ -15,8 +27,14 @@ services:
       - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
       - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
       - BROWSER=/bin/echo
-    cap_add:
-      - NET_ADMIN
+      - HTTP_PROXY=http://proxy:3128
+      - HTTPS_PROXY=http://proxy:3128
+      - http_proxy=http://proxy:3128
+      - https_proxy=http://proxy:3128
+      - NO_PROXY=localhost,127.0.0.1
+      - no_proxy=localhost,127.0.0.1
+    networks:
+      - dev-internal
     stdin_open: true
     tty: true
 
@@ -32,6 +50,10 @@ services:
     entrypoint: /bin/sh
     stdin_open: true
     tty: true
+
+networks:
+  dev-internal:
+    internal: true
 
 volumes:
   repos:

@@ -4,17 +4,25 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMPOSE_FILE="$SCRIPT_DIR/compose.yaml"
 ENV_FILE="$SCRIPT_DIR/.env"
-CONTAINER="dev-runner"
+CONTAINER="claude-dev"
+PROXY_CONTAINER="claude-proxy"
 
 ENV_FILE_ARG=""
 [ -f "$ENV_FILE" ] && ENV_FILE_ARG="--env-file $ENV_FILE"
 
+# Start proxy if not already running
+if ! docker ps --format '{{.Names}}' | grep -q "^${PROXY_CONTAINER}$"; then
+  echo "[claude-dev] Starting proxy container..."
+  docker-compose $ENV_FILE_ARG -f "$COMPOSE_FILE" up -d proxy > /dev/null
+  echo "[claude-dev] Proxy ready."
+fi
+
 # Start persistent container if not already running
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
-  echo "[dev] Starting persistent container..."
+  echo "[claude-dev] Starting persistent container..."
   docker-compose $ENV_FILE_ARG -f "$COMPOSE_FILE" run \
     --service-ports -d --name "$CONTAINER" dev sleep infinity > /dev/null
-  echo "[dev] Container ready."
+  echo "[claude-dev] Container ready."
 fi
 
 # Open a shell (or run a command if arguments are given)

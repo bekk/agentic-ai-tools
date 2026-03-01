@@ -1,8 +1,10 @@
 services:
   proxy:
     build:
-      context: proxy
+      context: ../proxy
       dockerfile: Dockerfile
+    volumes:
+      - ./whitelist.conf:/etc/squid/whitelist.conf:ro
     container_name: opencode-proxy
     networks:
       - default

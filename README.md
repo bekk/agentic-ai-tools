@@ -2,9 +2,7 @@
 
 Portabelt og nedlåst utviklingsmiljø for agent-støttet Java-utvikling med Gradle. Ingen prosjektkode er bakt inn — imagene gjenbrukes på tvers av repoer.
 
-*Forutsetningen er at god kodepraksis er fulgt for repo'et, og at det enten er eller kunne ha vært public.*
-
-*For GitHub bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser*
+*For GitHub bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser. Påse at god kodepraksis er fulgt for repo'et, og at det enten er eller kunne ha vært public.*
 
 ---
 

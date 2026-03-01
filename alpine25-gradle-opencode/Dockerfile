@@ -2,7 +2,7 @@ FROM eclipse-temurin:25-alpine
 
 # System tools
 RUN apk upgrade --no-cache \
- && apk add --no-cache bash curl git iptables jq ripgrep \
+ && apk add --no-cache bash curl git jq ripgrep \
  && apk add --no-cache \
       --repository https://dl-cdn.alpinelinux.org/alpine/edge/community \
       github-cli
@@ -30,17 +30,6 @@ WORKDIR /repos
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
-# Network management helpers
-RUN printf '#!/bin/sh\n\
-[ -z "$1" ] && { echo "Usage: oc-allow <ip>"; exit 1; }\n\
-iptables -I OUTPUT -d "$1" -j ACCEPT\n\
-echo "$1" >> "$HOME/.config/opencode/extra-ips.txt"\n\
-echo "Allowed and saved: $1"\n' > /usr/local/bin/oc-allow && \
-    printf '#!/bin/sh\n\
-dmesg 2>/dev/null | grep "\\[OC-BLOCKED\\]" | grep -oE "DST=[0-9.]+" | sed "s/DST=//" | sort -u\n' \
-    > /usr/local/bin/oc-blocked && \
-    chmod +x /usr/local/bin/oc-allow /usr/local/bin/oc-blocked
 
 EXPOSE 8080 8081
 

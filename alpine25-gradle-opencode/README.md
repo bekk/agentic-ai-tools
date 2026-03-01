@@ -35,23 +35,11 @@ cd <repo>
 opencode
 ```
 
-For Gradle-bygg, kjør fra **vertsmaskinen** (ikke inne i dev-containeren):
-
 ```sh
-# 7. Start gradle-containeren i riktig repo og kjør bygg
-./gradle.sh "cd <repo> && ./gradlew build"
-```
-
-Når ingen nye avhengigheter trenger å lastes ned, fungerer `./gradlew` fint direkte inne i dev-containeren via den delte gradle-cachen. Bruk `gradle.sh` (opencode-gradle) når avhengigheter endres, siden opencode-dev har begrenset nettverkstilgang.
-
-```sh
-# 8. [I dev-containeren] Få opencode til å bygge repo'et (når avhengigheter ikke endres, ellers bruk gradle-containeren)
+# 7. [I dev-containeren] Få opencode til å bygge repo'et
 (opencode)> build it
 
-# 9a. [I gradle-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
-./gradlew bootRun  # Hvis Spring Boot benyttes
-
-# 9b. [I dev-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
+# 8. [I dev-containeren] Start applikasjonen (port-mappingen må være konfigurert riktig)
 (opencode)> /exit
 ./gradlew bootRun  # Hvis Spring Boot benyttes
 ```
@@ -64,8 +52,7 @@ Opencode er et kraftig verktøy: det kan lese og skrive filer, kjøre shell-komm
 
 Dette oppsettet begrenser opencode til et strengt kontrollert miljø:
 
-- **Nettverkstilgang** er begrenset til GitHub og Anthropic — opencode kan jobbe med kode og kommunisere med API-et, men ikke nå ut til vilkårlige internett-ressurser.
-- **Gradle-bygg** kjøres i en separat container uten nettverksbegrensning, siden nedlasting av avhengigheter fra Maven Central og lignende er nødvendig og forventet.
+- **Nettverkstilgang** er begrenset via en Squid-proxy — opencode kan jobbe med kode, kommunisere med API-et og laste ned avhengigheter fra Maven Central, men ikke nå ut til vilkårlige internett-ressurser.
 - **Legitimasjon** (GitHub-token, Anthropic API-nøkkel) lagres i Docker-volumer og miljøvariabler, og eksponeres ikke utenfor container-miljøet.
 
 Målet er å gi opencode akkurat nok tilgang til å være nyttig, og ikke mer.
@@ -78,13 +65,11 @@ Målet er å gi opencode akkurat nok tilgang til å være nyttig, og ikke mer.
 graph TD
     host["<b>Host</b>"]
 
-    host -->|"./dev.sh"| dev["<b>opencode-dev</b><br/><br/>JDK 25<br/>opencode CLI<br/>gh CLI<br/>git<br/><br/>Nettverk:<br/>kun via proxy"]
-    host -->|"./gradle.sh"| gradle["<b>opencode-gradle</b><br/><br/>JDK 25<br/><br/>Nettverk:<br/>ubegrenset"]
-    dev -->|"HTTPS_PROXY"| proxy["<b>opencode-proxy</b><br/><br/>Squid<br/>domene-whitelist<br/><br/>✓ *.anthropic.com<br/>✓ *.github.com<br/>✗ alt annet"]
+    host -->|"./dev.sh"| dev["<b>opencode-dev</b><br/><br/>JDK 25<br/>opencode CLI<br/>gh CLI<br/>git"]
+    host -->|"(automatisk)"| proxy["<b>opencode-proxy</b><br/><br/>Squid<br/>domene-whitelist<br/><br/>✓ *.anthropic.com<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
+    dev -->|"HTTPS_PROXY"| proxy
     proxy --> internet["internett"]
 
-    gradle --- repos
-    gradle --- gcache
     dev --- repos[("repos")]
     dev --- gcache[("gradle-cache")]
     dev --- ghauth[("gh-auth")]
@@ -101,8 +86,8 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 
 | Volum | Montert i | Innhold |
 |-------|-----------|---------|
-| `repos` | dev + gradle | Klonede repoer (`/repos`) |
-| `gradle-cache` | dev + gradle | Gradle-cache (`~/.gradle`) — holder daemonen varm |
+| `repos` | opencode-dev | Klonede repoer (`/repos`) |
+| `gradle-cache` | opencode-dev | Gradle-cache (`~/.gradle`) — holder daemonen varm |
 | `gh-auth` | opencode-dev | GitHub-legitimasjon (`~/.config/gh`) |
 | `opencode-config` | opencode-dev | Opencode-konfig (`~/.config/opencode`) |
 
@@ -112,12 +97,22 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `proxy/whitelist.conf`:
+Tillatte domener er definert i `whitelist.conf`:
 
 ```
 .anthropic.com
 .github.com
 .githubusercontent.com
+
+# Maven Central
+repo1.maven.org
+
+# Gradle Plugin Portal
+plugins.gradle.org
+
+# Gradle distribution (wrapper-nedlastinger)
+downloads.gradle.org
+services.gradle.org
 ```
 
 ### Legge til et nytt domene
@@ -125,7 +120,7 @@ Tillatte domener er definert i `proxy/whitelist.conf`:
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> proxy/whitelist.conf
+echo ".nyttdomene.com" >> whitelist.conf
 docker exec opencode-proxy squid -k reconfigure
 ```
 
@@ -153,7 +148,7 @@ GIT_AUTHOR_EMAIL=deg@eksempel.no
 # Påkrevd: Anthropic API-nøkkel for opencode
 ANTHROPIC_API_KEY=sk-ant-...
 
-# Valgfritt: porter eksponert av opencode-gradle (standardverdi: 8080, 8081)
+# Valgfritt: porter eksponert av opencode-dev (standardverdi: 8080, 8081)
 GRADLE_PORT_1=8080
 GRADLE_PORT_2=8081
 ```
@@ -162,20 +157,20 @@ GRADLE_PORT_2=8081
 
 ### Portmapping
 
-`opencode-dev` eksponerer ingen porter — opencode trenger ikke å nås utenfra. `opencode-gradle` eksponerer porter for applikasjoner som kjøres der:
+`opencode-dev` eksponerer porter for applikasjoner som kjøres der:
 
 | Variabel | Vertsport (standard) | Containerport |
 |----------|----------------------|---------------|
 | `GRADLE_PORT_1` | 8080 | 8080 |
 | `GRADLE_PORT_2` | 8081 | 8081 |
 
-En app som lytter på port 8080 inne i gradle-containeren nås på `localhost:8080` fra verten.
+En app som lytter på port 8080 inne i dev-containeren nås på `localhost:8080` fra verten.
 
-Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at `opencode-gradle` allerede kjører, må du fjerne den først:
+Portmappinger settes ved container-opprettelse. Hvis du endrer porter etter at `opencode-dev` allerede kjører, må du fjerne den først:
 
 ```sh
-docker rm -f opencode-gradle
-./gradle.sh
+docker rm -f opencode-dev
+./dev.sh
 ```
 
 ---
@@ -186,6 +181,7 @@ docker rm -f opencode-gradle
 |-------|----------|-----------|
 | Opencode CLI | `opencode --version` | Skriver ut versjon |
 | GitHub CLI | `gh --version` | Skriver ut versjon |
+| Gradle-avhengigheter | `./gradlew dependencies` | Lastes ned via proxy |
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Feil (blokkert av proxy) |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Anthropic nåbar | API-kall via `opencode` | Fungerer |

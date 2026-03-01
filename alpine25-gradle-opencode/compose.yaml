@@ -33,21 +33,11 @@ services:
       - https_proxy=http://proxy:3128
       - NO_PROXY=localhost,127.0.0.1
       - no_proxy=localhost,127.0.0.1
-    networks:
-      - dev-internal
-    stdin_open: true
-    tty: true
-
-  gradle:
-    image: eclipse-temurin:25-alpine
-    volumes:
-      - repos:/repos
-      - gradle-cache:/root/.gradle
-    working_dir: /repos
     ports:
       - "${GRADLE_PORT_1:-8080}:8080"
       - "${GRADLE_PORT_2:-8081}:8081"
-    entrypoint: /bin/sh
+    networks:
+      - dev-internal
     stdin_open: true
     tty: true
 

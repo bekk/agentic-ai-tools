@@ -106,13 +106,10 @@ Tillatte domener er definert i `whitelist.conf`:
 
 # Maven Central
 repo1.maven.org
+repo.maven.apache.org
 
-# Gradle Plugin Portal
-plugins.gradle.org
-
-# Gradle distribution (wrapper-nedlastinger)
-downloads.gradle.org
-services.gradle.org
+# Gradle (alle subdomener: plugins, downloads, services, plugins-artifacts, osv.)
+.gradle.org
 ```
 
 ### Legge til et nytt domene

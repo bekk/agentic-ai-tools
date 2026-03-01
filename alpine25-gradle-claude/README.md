@@ -95,19 +95,25 @@ claude.ai
 
 # Maven Central
 repo1.maven.org
+repo.maven.apache.org
 
-# Gradle Plugin Portal
-plugins.gradle.org
-
-# Gradle distribution (wrapper-nedlastinger)
-downloads.gradle.org
-services.gradle.org
+# Gradle (alle subdomener: plugins, downloads, services, plugins-artifacts, osv.)
+.gradle.org
 ```
 
-Legg til domener her ved behov (f.eks. for Maven-speil eller andre API-er). Start proxy-containeren på nytt etter endringer:
+### Legge til et nytt domene
+
+Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-docker restart claude-proxy
+echo ".nyttdomene.com" >> whitelist.conf
+docker exec claude-proxy squid -k reconfigure
+```
+
+### Se hva som blokkeres
+
+```sh
+docker logs claude-proxy | grep DENIED
 ```
 
 ---

@@ -1,0 +1,60 @@
+services:
+  proxy:
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+    container_name: opencode-proxy
+    networks:
+      - default
+      - dev-internal
+    restart: unless-stopped
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - repos:/repos
+      - gradle-cache:/root/.gradle
+      - gh-auth:/root/.config/gh
+      - opencode-config:/root/.config/opencode
+    working_dir: /repos
+    environment:
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - HTTP_PROXY=http://proxy:3128
+      - HTTPS_PROXY=http://proxy:3128
+      - http_proxy=http://proxy:3128
+      - https_proxy=http://proxy:3128
+      - NO_PROXY=localhost,127.0.0.1
+      - no_proxy=localhost,127.0.0.1
+    networks:
+      - dev-internal
+    stdin_open: true
+    tty: true
+
+  gradle:
+    image: eclipse-temurin:25-alpine
+    volumes:
+      - repos:/repos
+      - gradle-cache:/root/.gradle
+    working_dir: /repos
+    ports:
+      - "${GRADLE_PORT_1:-8080}:8080"
+      - "${GRADLE_PORT_2:-8081}:8081"
+    entrypoint: /bin/sh
+    stdin_open: true
+    tty: true
+
+networks:
+  dev-internal:
+    internal: true
+
+volumes:
+  repos:
+  gradle-cache:
+  gh-auth:
+  opencode-config:

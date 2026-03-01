@@ -32,9 +32,7 @@ cd <repo>
 
 # 6. [I dev-container] Start Claude
 claude
-```
 
-```sh
 # 7. [I dev-container] Få Claude til å bygge repo'et
 (claude)> build it
 

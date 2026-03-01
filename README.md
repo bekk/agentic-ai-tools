@@ -1,4 +1,4 @@
-# Nedlåst utviklingscontainer
+# Nedlåst utviklingscontainer (JDK og Gradle)
 
 Portabelt og nedlåst utviklingsmiljø for agent-støttet Java-utvikling med Gradle. Ingen prosjektkode er bakt inn — imagene gjenbrukes på tvers av repoer.
 

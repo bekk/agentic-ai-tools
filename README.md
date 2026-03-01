@@ -4,7 +4,7 @@ Portabelt og nedlåst utviklingsmiljø for agent-støttet Java-utvikling med Gra
 
 *Forutsetningen er at god kodepraksis er fulgt for repo'et, og at det enten er eller kunne ha vært public.*
 
-> **Repo:** https://github.com/bekk/agentic-ai-tools
+*For GitHub bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser*
 
 ---
 

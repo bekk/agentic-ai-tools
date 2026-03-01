@@ -31,9 +31,7 @@ gh auth login  # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og
 gh repo clone <org>/<repo>
 cd <repo>
 opencode
-```
 
-```sh
 # 7. [I dev-container] Få opencode til å bygge repo'et
 (opencode)> build it
 

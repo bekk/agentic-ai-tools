@@ -33,6 +33,7 @@ services:
       - https_proxy=http://proxy:3128
       - NO_PROXY=localhost,127.0.0.1
       - no_proxy=localhost,127.0.0.1
+      - GRADLE_OPTS=-Dhttps.proxyHost=proxy -Dhttps.proxyPort=3128 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=localhost|127.0.0.1
     ports:
       - "${GRADLE_PORT_1:-8080}:8080"
       - "${GRADLE_PORT_2:-8081}:8081"

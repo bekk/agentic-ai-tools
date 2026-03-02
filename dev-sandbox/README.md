@@ -10,9 +10,9 @@ Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-u
 
 | Katalog | AI-verktøy | Container |
 |---------|------------|-----------|
-| `jdk-anthropic/` | Claude Code + opencode | `ai-dev` |
+| `jdk-gradle-anthropic/` | Claude Code + opencode | `ai-dev` |
 
-Se `jdk-anthropic/` for hurtigstart og detaljer.
+Se `jdk-gradle-anthropic/` for hurtigstart og detaljer.
 
 ---
 
@@ -48,7 +48,7 @@ graph TD
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `jdk-anthropic/whitelist.conf`:
+Tillatte domener er definert i `jdk-gradle-anthropic/whitelist.conf`:
 
 ```
 .anthropic.com
@@ -73,7 +73,7 @@ downloads.gradle.org
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> jdk-anthropic/whitelist.conf
+echo ".nyttdomene.com" >> jdk-gradle-anthropic/whitelist.conf
 docker exec dev-proxy squid -k reconfigure
 ```
 
@@ -101,7 +101,7 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 
 ## Miljøvariabler
 
-Kopier `.env.example` til `.env` i `jdk-anthropic/`:
+Kopier `.env.example` til `.env` i `jdk-gradle-anthropic/`:
 
 ```sh
 GIT_AUTHOR_NAME=Ditt Navn
@@ -124,7 +124,7 @@ Portmappinger settes ved container-opprettelse. Endre dem ved å fjerne containe
 
 ```sh
 docker rm -f ai-dev
-./jdk-anthropic/dev.sh
+./jdk-gradle-anthropic/dev.sh
 ```
 
 ---

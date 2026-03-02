@@ -1,4 +1,4 @@
-# Nedlåst utviklingscontainer (JDK og Gradle)
+# Nedlåst utviklingscontainer for AI-assistert utvikling (eksempel med JDK og Gradle)
 
 Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-utvikling med Gradle. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
 

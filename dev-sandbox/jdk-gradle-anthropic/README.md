@@ -24,20 +24,24 @@ docker-compose build
 chmod +x dev.sh
 ./dev.sh
 
-# 5. [I dev-container] Første gang: autentiser gh og Claude Code
+# 5. [I dev-container] Første gang: autentiser gh
 gh auth login        # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser
-claude               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
 
-# 6. [I dev-container] Klon ditt repo og start et AI-verktøy
+# 6. [I dev-container] Klon ditt repo
 gh repo clone <org>/<repo>
 cd <repo>
-claude               # eller: opencode
+
+# 7a. [I dev-container] Første gang: autentiser Claude Code hvis ikke env-variabel
+claude               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
+
+# 7b. [I dev-container] Start opencode. Autentisert mot Anthropic gjennom env-variabe
+opencode               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
 
 # 7. [I dev-container] Få agenten til å bygge repo'et
-(claude)> build it
+(ai)> build it
 
 # 8. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
-(claude)> /exit
+(ai)> /exit
 ./gradlew bootRun    # hvis Spring Boot benyttes
 ```
 

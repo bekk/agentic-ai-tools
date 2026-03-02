@@ -9,19 +9,18 @@ Dev-container med JDK 25, Claude Code og opencode — begge AI-CLI-verktøy i et
 Forutsetninger: Docker, `docker-compose`
 
 ```sh
-# 1. Klon og gå inn i katalogen
+# 1. [På vertsmaskin] Klon og gå inn i katalogen
 git clone https://github.com/bekk/agentic-ai-tools.git
 cd agentic-ai-tools/dev-sandbox/jdk-gradle-anthropic
 
-# 2. Sett git-identitet og API-nøkkel
+# 2. [På vertsmaskin] Sett git-identitet og API-nøkkel
 cp .env.example .env
 # Rediger .env med navn, e-post og ANTHROPIC_API_KEY
 
-# 3. Bygg imagene (én gang)
+# 3. [På vertsmaskin] Bygg imagene (én gang)
 docker-compose build
 
-# 4. Start dev-containeren (starter proxy automatisk)
-chmod +x dev.sh
+# 4. [På vertsmaskin] Start dev-containeren (starter proxy automatisk)
 ./dev.sh
 
 # 5. [I dev-container] Første gang: autentiser gh
@@ -37,14 +36,17 @@ claude               # følg instruksjonene — kopier URL til nettleseren på v
 # 7b. [I dev-container] Start opencode. Autentisert mot Anthropic gjennom env-variabe
 opencode               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
 
-# 7. [I dev-container] Få agenten til å bygge repo'et
+# 8. [I dev-container] Få agenten til å bygge repo'et
 (ai)> build it
 
-# 8. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
+# 8a. [På vertsmaskin] Start nytt shell og start applikasjonen
+./shell.sh
+./gradlew bootRun    # hvis Spring Boot benyttes
+
+# 8b. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
 (ai)> /exit
 ./gradlew bootRun    # hvis Spring Boot benyttes
 ```
-
 ---
 
 ## Autentisering

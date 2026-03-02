@@ -9,6 +9,15 @@ RUN apk upgrade --no-cache \
 # Claude Code CLI
 RUN npm install -g @anthropic-ai/claude-code
 
+# Replace globalThis.fetch with undici's proxy-aware fetch so all Node.js code
+# (including Claude Code) routes fetch() through HTTPS_PROXY automatically.
+RUN npm install -g undici
+RUN printf '%s\n' \
+  "import { setGlobalDispatcher, ProxyAgent, fetch as proxiedFetch } from 'undici';" \
+  "const p = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;" \
+  "if (p) { setGlobalDispatcher(new ProxyAgent(p)); globalThis.fetch = proxiedFetch; }" \
+  > /usr/local/lib/node-proxy-bootstrap.mjs
+
 # Opencode CLI — download musl binary directly from GitHub releases
 RUN ARCH=$(uname -m) && \
     case "$ARCH" in \

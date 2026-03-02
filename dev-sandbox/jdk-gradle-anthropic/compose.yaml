@@ -28,6 +28,7 @@ services:
       - NO_PROXY=localhost,127.0.0.1
       - no_proxy=localhost,127.0.0.1
       - GRADLE_OPTS=-Dhttps.proxyHost=dev-proxy -Dhttps.proxyPort=3128 -Dhttp.proxyHost=dev-proxy -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=localhost|127.0.0.1
+      - NODE_OPTIONS=--import /usr/local/lib/node-proxy-bootstrap.mjs
       - BROWSER=/bin/echo
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
     ports:

@@ -6,14 +6,40 @@ Dev-container med JDK 25, Claude Code og opencode — begge AI-CLI-verktøy i et
 
 ## Hurtigstart
 
+Forutsetninger: Docker, `docker-compose`
+
 ```sh
+# 1. Klon og gå inn i katalogen
+git clone https://github.com/bekk/agentic-ai-tools.git
+cd agentic-ai-tools/dev-sandbox/jdk-gradle-anthropic
+
+# 2. Sett git-identitet og API-nøkkel
 cp .env.example .env
-# Fyll inn GIT_AUTHOR_NAME, GIT_AUTHOR_EMAIL og ANTHROPIC_API_KEY
+# Rediger .env med navn, e-post og ANTHROPIC_API_KEY
+
+# 3. Bygg imagene (én gang)
+docker-compose build
+
+# 4. Start dev-containeren (starter proxy automatisk)
 chmod +x dev.sh
 ./dev.sh
-```
 
-Første gang bygges imaget automatisk. Deretter starter `dev-proxy` og `ai-dev`, og du får en bash-sesjon inne i containeren.
+# 5. [I dev-container] Første gang: autentiser gh og Claude Code
+gh auth login        # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser
+claude               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
+
+# 6. [I dev-container] Klon ditt repo og start et AI-verktøy
+gh repo clone <org>/<repo>
+cd <repo>
+claude               # eller: opencode
+
+# 7. [I dev-container] Få agenten til å bygge repo'et
+(claude)> build it
+
+# 8. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
+(claude)> /exit
+./gradlew bootRun    # hvis Spring Boot benyttes
+```
 
 ---
 

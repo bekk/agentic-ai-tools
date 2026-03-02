@@ -8,6 +8,7 @@ services:
       - ./whitelist.conf:/etc/squid/whitelist.conf:ro
     networks:
       - proxy-net
+      - external-net
     restart: unless-stopped
 
   dev:
@@ -47,6 +48,8 @@ networks:
   proxy-net:
     name: proxy-net
     internal: true
+  external-net:
+    name: external-net
 
 volumes:
   repos:

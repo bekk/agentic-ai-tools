@@ -7,6 +7,10 @@ Dev-container med JDK 25, Claude Code og opencode — begge AI-CLI-verktøy i et
 ## Hurtigstart
 
 Forutsetninger: Docker, `docker-compose`
+```sh
+# Gi nok minne til container-tjenesten, f.eks colima:
+colima start --memory 8
+```
 
 ```sh
 # 1. [På vertsmaskin] Klon og gå inn i katalogen

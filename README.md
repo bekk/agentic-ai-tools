@@ -1,6 +1,6 @@
 # Nedlåst utviklingscontainer (JDK og Gradle)
 
-Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-utvikling med Gradle. Ingen prosjektkode er bakt inn — imagene gjenbrukes på tvers av repoer.
+Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-utvikling med Gradle. Ingen prosjektkode er bakt inn — imaget gjenbrukes på tvers av repoer.
 
 *For GitHub bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser. Påse at god kodepraksis er fulgt for repo'et, og at det enten er eller kunne ha vært public.*
 
@@ -10,10 +10,9 @@ Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-u
 
 | Katalog | AI-verktøy | Container |
 |---------|------------|-----------|
-| `alpine25-gradle-claude/` | Claude Code CLI | `claude-dev` |
-| `alpine25-gradle-opencode/` | opencode CLI | `opencode-dev` |
+| `jdk-anthropic/` | Claude Code + opencode | `ai-dev` |
 
-Se respektiv katalog for hurtigstart og verktøyspesifikke detaljer.
+Se `jdk-anthropic/` for hurtigstart og detaljer.
 
 ---
 
@@ -36,22 +35,20 @@ Målet er å gi agenten akkurat nok tilgang til å være nyttig, og ikke mer.
 graph TD
     host["<b>Vertsmaskin</b>"]
 
-    host -->|"./dev.sh"| claude["<b>claude-dev</b><br/>JDK 25 · Claude Code · gh · git"]
-    host -->|"./dev.sh"| opencode["<b>opencode-dev</b><br/>JDK 25 · opencode · gh · git"]
-    host -->|"(automatisk, delt)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
+    host -->|"./dev.sh"| aidev["<b>ai-dev</b><br/>JDK 25 · Claude Code · opencode · gh · git"]
+    host -->|"(automatisk)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
 
-    claude -->|"HTTP_PROXY :3128"| proxy
-    opencode -->|"HTTP_PROXY :3128"| proxy
+    aidev -->|"HTTP_PROXY :3128"| proxy
     proxy -->|"internett"| internet["Internett"]
 ```
 
-Begge dev-containerne er kun koblet til det interne Docker-nettverket `proxy-net` — uten direkte internett-ruting. `dev-proxy` er en delt Squid-proxy som er bro mellom `proxy-net` og internett. Den slipper kun gjennom domener på whitelisten, filtrert på domenenavn (ikke IP-adresser), og fungerer derfor uavhengig av CDN-rotasjon.
+`ai-dev` er kun koblet til det interne Docker-nettverket `proxy-net` — uten direkte internett-ruting. `dev-proxy` er en Squid-proxy som er bro mellom `proxy-net` og internett. Den slipper kun gjennom domener på whitelisten.
 
 ---
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `shared/whitelist.conf`:
+Tillatte domener er definert i `jdk-anthropic/whitelist.conf`:
 
 ```
 .anthropic.com
@@ -76,7 +73,7 @@ downloads.gradle.org
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> shared/whitelist.conf
+echo ".nyttdomene.com" >> jdk-anthropic/whitelist.conf
 docker exec dev-proxy squid -k reconfigure
 ```
 
@@ -84,11 +81,6 @@ docker exec dev-proxy squid -k reconfigure
 
 ```sh
 docker logs dev-proxy | grep DENIED
-```
-
-Eksempel på output:
-```
-TCP_DENIED/403 CONNECT example.com:443
 ```
 
 ---
@@ -102,54 +94,51 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 | `repos` | Klonede repoer (`/repos`) |
 | `gradle-cache` | Gradle-cache (`~/.gradle`) — holder daemonen varm |
 | `gh-auth` | GitHub-legitimasjon (`~/.config/gh`) |
-
-Verktøyspesifikke volumer (f.eks. `claude-auth`, `opencode-config`) er beskrevet i respektiv katalog.
+| `claude-auth` | Claude Code-legitimasjon (`~/.claude`) |
+| `opencode-config` | opencode-konfigurasjon (`~/.config/opencode`) |
 
 ---
 
 ## Miljøvariabler
 
-Kopier `.env.example` til `.env` i prosjektkatalogen:
+Kopier `.env.example` til `.env` i `jdk-anthropic/`:
 
 ```sh
 GIT_AUTHOR_NAME=Ditt Navn
 GIT_AUTHOR_EMAIL=deg@eksempel.no
+ANTHROPIC_API_KEY=sk-ant-...
 
-# Valgfritt: porter eksponert av dev-containeren (standardverdi: 8080, 8081)
+# Valgfritt: porter eksponert av ai-dev (standardverdi: 8080, 8081)
 GRADLE_PORT_1=8080
 GRADLE_PORT_2=8081
 ```
 
 ### Portmapping
 
-Dev-containerne eksponerer porter for applikasjoner som kjøres der:
-
 | Variabel | Vertsport (standard) | Containerport |
 |----------|----------------------|---------------|
 | `GRADLE_PORT_1` | 8080 | 8080 |
 | `GRADLE_PORT_2` | 8081 | 8081 |
 
-En app som lytter på port 8080 inne i dev-containeren nås på `localhost:8080` fra verten.
-
-Portmappinger settes ved container-opprettelse. Endre dem ved å stoppe containeren og kjøre `./dev.sh` på nytt:
+Portmappinger settes ved container-opprettelse. Endre dem ved å fjerne containeren og kjøre `./dev.sh` på nytt:
 
 ```sh
-docker rm -f <container-navn>
-./dev.sh
+docker rm -f ai-dev
+./jdk-anthropic/dev.sh
 ```
 
 ---
 
 ## Verifisering
 
-Kjør fra innsiden av dev-containeren:
+Kjør fra innsiden av `ai-dev`:
 
 | Sjekk | Kommando | Forventet |
 |-------|----------|-----------|
+| Claude Code | `claude --version` | Skriver ut versjon |
+| opencode | `opencode --version` | Skriver ut versjon |
 | GitHub CLI | `gh --version` | Skriver ut versjon |
 | Gradle-avhengigheter | `./gradlew dependencies` | Lastes ned via proxy |
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Blokkert av proxy |
 | GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
 | Proxy-logger | `docker logs dev-proxy \| grep DENIED` | Viser blokkerte forsøk |
-
-Verktøyspesifikke sjekker er beskrevet i respektiv katalog.

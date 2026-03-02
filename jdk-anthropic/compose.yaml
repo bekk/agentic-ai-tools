@@ -1,5 +1,19 @@
 services:
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: dev-proxy
+    volumes:
+      - ./whitelist.conf:/etc/squid/whitelist.conf:ro
+    networks:
+      - proxy-net
+    restart: unless-stopped
+
   dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
     working_dir: /repos
     environment:
       - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-Dev}
@@ -13,10 +27,30 @@ services:
       - NO_PROXY=localhost,127.0.0.1
       - no_proxy=localhost,127.0.0.1
       - GRADLE_OPTS=-Dhttps.proxyHost=dev-proxy -Dhttps.proxyPort=3128 -Dhttp.proxyHost=dev-proxy -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=localhost|127.0.0.1
+      - BROWSER=/bin/echo
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
     ports:
       - "${GRADLE_PORT_1:-8080}:8080"
       - "${GRADLE_PORT_2:-8081}:8081"
+    volumes:
+      - repos:/repos
+      - gradle-cache:/root/.gradle
+      - gh-auth:/root/.config/gh
+      - claude-auth:/root/.claude
+      - opencode-config:/root/.config/opencode
     networks:
       - proxy-net
     stdin_open: true
     tty: true
+
+networks:
+  proxy-net:
+    name: proxy-net
+    internal: true
+
+volumes:
+  repos:
+  gradle-cache:
+  gh-auth:
+  claude-auth:
+  opencode-config:

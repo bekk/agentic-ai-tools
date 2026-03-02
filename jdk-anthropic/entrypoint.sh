@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# ── Opencode default config ─────────────────────────────────────────────────
 OPENCODE_CONFIG="$HOME/.config/opencode/opencode.json"
 if [ ! -f "$OPENCODE_CONFIG" ]; then
   mkdir -p "$(dirname "$OPENCODE_CONFIG")"
@@ -10,7 +9,7 @@ if [ ! -f "$OPENCODE_CONFIG" ]; then
   "model": "anthropic/claude-sonnet-4-6"
 }
 EOF
-  echo "[opencode-dev] Created default opencode config."
+  echo "[ai-dev] Created default opencode config."
 fi
 
 exec "$@"

@@ -94,18 +94,17 @@ gh repo clone <org>/<repo>
 cd <repo>
 
 # 7. [ai-dev] Start en AI-agent og sett den i gang
-claude
+claude        # Følg eventuell autentiseringsflyt første gang
 (ai)> bygg prosjektet og fiks eventuelle kompileringsfeil
 
 # — eller med opencode —
-opencode
+opencode      # Krever miljøvariabel for claude sin api-nøkkel 
+(ai)> bygg prosjektet og fiks eventuelle kompileringsfeil
 
 # — eller med GitHub Copilot CLI —
-copilot explain "hva gjør denne Gradle-tasken?"
-copilot suggest "kjør bare integrasjonstestene"
-```
+copilot       # Allerede logget på med gh auth login
+(ai)> bygg prosjektet og fiks eventuelle kompileringsfeil
 
-```sh
 # 8. [Vertsmaskin] Åpne et nytt shell mot samme container
 ./shell.sh
 ./gradlew bootRun    # hvis Spring Boot

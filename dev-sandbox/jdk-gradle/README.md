@@ -1,6 +1,6 @@
-# jdk-anthropic
+# jdk-gradle
 
-Dev-container med JDK 25, Claude Code og opencode — begge AI-CLI-verktøy i ett image. Nettverkstilgang er begrenset via Squid-proxy.
+Dev-container med JDK 25, Claude Code, opencode og copilot — AI-CLI-verktøy i ett image. Nettverkstilgang er begrenset via Squid-proxy.
 
 ---
 
@@ -15,7 +15,7 @@ colima start --memory 8
 ```sh
 # 1. [På vertsmaskin] Klon og gå inn i katalogen
 git clone https://github.com/bekk/agentic-ai-tools.git
-cd agentic-ai-tools/dev-sandbox/jdk-gradle-anthropic
+cd agentic-ai-tools/dev-sandbox/jdk-gradle
 
 # 2. [På vertsmaskin] Sett git-identitet og API-nøkkel
 cp .env.example .env
@@ -77,6 +77,15 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 Konfigurasjonen lagres i volumet `opencode-config` (`~/.config/opencode`) og opprettes automatisk ved første oppstart.
 
+### copilot
+
+`copilot` bruker GitHub-legitimasjonen fra `gh auth login` — ingen separat autentisering nødvendig.
+
+```sh
+copilot explain "git rebase -i HEAD~3"
+copilot suggest "angre siste commit uten å miste endringer"
+```
+
 ---
 
 ## Volumer
@@ -120,6 +129,7 @@ docker exec dev-proxy squid -k reconfigure
 |-------|----------|-----------|
 | Claude Code | `claude --version` | Skriver ut versjon |
 | opencode | `opencode --version` | Skriver ut versjon |
+| copilot | `copilot --version` | Skriver ut versjon |
 | GitHub CLI | `gh --version` | Skriver ut versjon |
 | Gradle-avhengigheter | `./gradlew dependencies` | Lastes ned via proxy |
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Blokkert av proxy |

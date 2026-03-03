@@ -10,9 +10,9 @@ Portabelt og nedlåst utviklingsmiljø (kommandolinje) for agent-støttet Java-u
 
 | Katalog | AI-verktøy | Container |
 |---------|------------|-----------|
-| `jdk-gradle-anthropic/` | Claude Code + opencode | `ai-dev` |
+| `jdk-gradle/` | Claude Code + opencode + copilot | `ai-dev` |
 
-Se `jdk-gradle-anthropic/` for hurtigstart og detaljer.
+Se `jdk-gradle/` for hurtigstart og detaljer.
 
 ---
 
@@ -35,7 +35,7 @@ Målet er å gi agenten akkurat nok tilgang til å være nyttig, og ikke mer.
 graph TD
     host["<b>Vertsmaskin</b>"]
 
-    host -->|"./dev.sh"| aidev["<b>ai-dev</b><br/>JDK 25 · Claude Code · opencode · gh · git"]
+    host -->|"./dev.sh"| aidev["<b>ai-dev</b><br/>JDK 25 · Claude Code · opencode · copilot · gh · git"]
     host -->|"(automatisk)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
 
     aidev -->|"HTTP_PROXY :3128"| proxy
@@ -48,7 +48,7 @@ graph TD
 
 ## Nettverkswhitelist
 
-Tillatte domener er definert i `jdk-gradle-anthropic/whitelist.conf`:
+Tillatte domener er definert i `jdk-gradle/whitelist.conf`:
 
 ```
 .anthropic.com
@@ -66,6 +66,9 @@ services.gradle.org
 plugins.gradle.org
 plugins-artifacts.gradle.org
 downloads.gradle.org
+
+# GitHub Copilot
+.githubcopilot.com
 ```
 
 ### Legge til et nytt domene
@@ -73,7 +76,7 @@ downloads.gradle.org
 Ingen rebuild og ingen container-restart nødvendig:
 
 ```sh
-echo ".nyttdomene.com" >> jdk-gradle-anthropic/whitelist.conf
+echo ".nyttdomene.com" >> jdk-gradle/whitelist.conf
 docker exec dev-proxy squid -k reconfigure
 ```
 
@@ -101,7 +104,7 @@ Alle data som skal overleve en container-omstart lagres i Docker-volumer:
 
 ## Miljøvariabler
 
-Kopier `.env.example` til `.env` i `jdk-gradle-anthropic/`:
+Kopier `.env.example` til `.env` i `jdk-gradle/`:
 
 ```sh
 GIT_AUTHOR_NAME=Ditt Navn
@@ -124,7 +127,7 @@ Portmappinger settes ved container-opprettelse. Endre dem ved å fjerne containe
 
 ```sh
 docker rm -f ai-dev
-./jdk-gradle-anthropic/dev.sh
+./jdk-gradle/dev.sh
 ```
 
 ---
@@ -137,6 +140,7 @@ Kjør fra innsiden av `ai-dev`:
 |-------|----------|-----------|
 | Claude Code | `claude --version` | Skriver ut versjon |
 | opencode | `opencode --version` | Skriver ut versjon |
+| copilot | `copilot --version` | Skriver ut versjon |
 | GitHub CLI | `gh --version` | Skriver ut versjon |
 | Gradle-avhengigheter | `./gradlew dependencies` | Lastes ned via proxy |
 | Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Blokkert av proxy |

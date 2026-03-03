@@ -36,7 +36,7 @@ graph TD
     host["<b>Vertsmaskin</b>"]
 
     host -->|"./dev.sh"| aidev["<b>ai-dev</b><br/>JDK 25 · Claude Code · opencode · copilot · gh · git"]
-    host -->|"(automatisk)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
+    host -->|"(automatisk)"| proxy["<b>dev-proxy</b><br/><br/>Squid<br/><br/>✓ *.anthropic.com<br/>✓ claude.ai<br/>✓ *.githubcopilot.com<br/>✓ *.github.com<br/>✓ Maven Central<br/>✓ Gradle repos<br/>✗ alt annet"]
 
     aidev -->|"HTTP_PROXY :3128"| proxy
     proxy -->|"internett"| internet["Internett"]

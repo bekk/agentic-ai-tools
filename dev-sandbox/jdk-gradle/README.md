@@ -38,7 +38,10 @@ cd <repo>
 claude               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
 
 # 7b. [I dev-container] Start opencode. Autentisert mot Anthropic gjennom env-variabe
-opencode               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
+opencode
+
+# 7c. [I dev-container] Start Copilot. Autentisert gjennom gh auth login
+copilot              
 
 # 8. [I dev-container] Få agenten til å bygge repo'et
 (ai)> build it
@@ -80,11 +83,6 @@ Konfigurasjonen lagres i volumet `opencode-config` (`~/.config/opencode`) og opp
 ### copilot
 
 `copilot` bruker GitHub-legitimasjonen fra `gh auth login` — ingen separat autentisering nødvendig.
-
-```sh
-copilot explain "git rebase -i HEAD~3"
-copilot suggest "angre siste commit uten å miste endringer"
-```
 
 ---
 

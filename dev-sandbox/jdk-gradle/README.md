@@ -1,135 +1,176 @@
-# jdk-gradle
+# Nedlåst AI-utviklingsmiljø for Java
 
-Dev-container med JDK 25, Claude Code, opencode og copilot — AI-CLI-verktøy i ett image. Nettverkstilgang er begrenset via Squid-proxy.
+> Et portabelt, nettverksisolert utviklingscontainer med AI-agenter innebygd — klar til bruk på tvers av repoer.
 
 ---
 
-## Hurtigstart
+## Motivasjon
 
-Forutsetninger: Docker, `docker-compose`
+AI-agenter er kraftige verktøy — og kraftige verktøy trenger grenser.
+
+En kodingsagent kan lese og skrive filer, kjøre shell-kommandoer og utføre git-operasjoner helt autonomt. Det åpner for utilsiktede hendelser:
+
+- **Datalekkasje** — agenten sender kildekode til ukjente tjenester
+- **Ukontrollerte avhengigheter** — tredjepartskode hentes fra vilkårlige kilder
+- **Uønskede handlinger** — push til feil branch, API-kall til ukjente endepunkt
+
+**Målet:** gi agenten akkurat nok tilgang til å være nyttig — og ikke mer.
+
+> *For GitHub: bruk fingranulert token begrenset til aktuelle repo(s) med kun Content- og PR-tillatelser. Påse at god kodepraksis er fulgt, og at kodebasen er eller kunne ha vært public.*
+
+---
+
+## Arkitektur
+
+```mermaid
+graph TD
+    host["<b>Vertsmaskin</b>"]
+
+    host -->|"./dev.sh"| aidev
+    host -->|"automatisk"| proxy
+
+    aidev -->|"HTTP_PROXY :3128"| proxy
+    proxy -->|"internett"| internet["🌐 Internett"]
+
+    subgraph proxy-net ["proxy-net (internt Docker-nettverk)"]
+        aidev["<b>ai-dev</b><br/>JDK 25 · Gradle<br/>Claude Code · opencode · copilot<br/>gh · git"]
+        proxy["<b>dev-proxy</b><br/>Squid<br/>─────────────<br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com / *.githubcopilot.com<br/>✓ Maven Central · Gradle repos<br/>✗ alt annet"]
+    end
+```
+
+**To containere, to nettverk:**
+
+| Container | Rolle | Nettverkstilgang |
+|-----------|-------|-----------------|
+| `ai-dev` | Utviklingsmiljø | Kun `proxy-net` (internt) |
+| `dev-proxy` | Squid-proxy | `proxy-net` + `external-net` (internett) |
+
+All trafikk fra `ai-dev` tvinges gjennom proxyen — Node.js (`undici`), Java (`GRADLE_OPTS`), og curl/wget via `HTTP_PROXY`/`HTTPS_PROXY`.
+
+**Persistens i Docker-volumer:**
+
+| Volum | Innhold |
+|-------|---------|
+| `repos` | Klonede repoer |
+| `gradle-cache` | Gradle-cache — holder daemonen varm mellom sesjoner |
+| `gh-auth` | GitHub-legitimasjon |
+| `claude-auth` | Claude Code-legitimasjon |
+| `opencode-config` | opencode-konfigurasjon |
+
+---
+
+## Kom i gang — steg for steg
+
+**Forutsetninger:** Docker, `docker-compose` (og f.eks. Colima på Mac)
+
 ```sh
-# Gi nok minne til container-tjenesten, f.eks colima:
+# 0. [Vertsmaskin] Gi nok minne til container-tjenesten
 colima start --memory 8
 ```
 
 ```sh
-# 1. [På vertsmaskin] Klon og gå inn i katalogen
+# 1. [Vertsmaskin] Klon repoet
 git clone https://github.com/bekk/agentic-ai-tools.git
 cd agentic-ai-tools/dev-sandbox/jdk-gradle
 
-# 2. [På vertsmaskin] Sett git-identitet og API-nøkkel
+# 2. [Vertsmaskin] Sett identitet og API-nøkkel
 cp .env.example .env
-# Rediger .env med navn, e-post og ANTHROPIC_API_KEY
+# Rediger .env — fyll inn navn, e-post og ANTHROPIC_API_KEY
 
-# 3. [På vertsmaskin] Bygg imagene (én gang)
+# 3. [Vertsmaskin] Bygg imagene (kun første gang)
 docker-compose build
 
-# 4. [På vertsmaskin] Start dev-containeren (starter proxy automatisk)
+# 4. [Vertsmaskin] Start containerne
 ./dev.sh
+```
 
-# 5. [I dev-container] Første gang: autentiser gh
-gh auth login        # bruk fingranulert token begrenset til de(t) aktuelle repo(s) og kun Content- og PR-tillatelser
+```sh
+# 5. [ai-dev] Første gang: autentiser GitHub
+gh auth login
+#    → bruk fingranulert token med kun Content- og PR-tillatelser
 
-# 6. [I dev-container] Klon ditt repo
+# 6. [ai-dev] Klon ditt prosjektrepo
 gh repo clone <org>/<repo>
 cd <repo>
 
-# 7a. [I dev-container] Første gang: autentiser Claude Code hvis ikke env-variabel
-claude               # følg instruksjonene — kopier URL til nettleseren på verten og lim inn token
+# 7. [ai-dev] Start en AI-agent og sett den i gang
+claude
+(ai)> bygg prosjektet og fiks eventuelle kompileringsfeil
 
-# 7b. [I dev-container] Start opencode. Autentisert mot Anthropic gjennom env-variabe
+# — eller med opencode —
 opencode
 
-# 7c. [I dev-container] Start Copilot. Autentisert gjennom gh auth login
-copilot              
+# — eller med GitHub Copilot CLI —
+copilot explain "hva gjør denne Gradle-tasken?"
+copilot suggest "kjør bare integrasjonstestene"
+```
 
-# 8. [I dev-container] Få agenten til å bygge repo'et
-(ai)> build it
-
-# 8a. [På vertsmaskin] Start nytt shell og start applikasjonen
+```sh
+# 8. [Vertsmaskin] Åpne et nytt shell mot samme container
 ./shell.sh
-./gradlew bootRun    # hvis Spring Boot benyttes
-
-# 8b. [I dev-container] Start applikasjonen (port-mappingen må være konfigurert riktig)
-(ai)> /exit
-./gradlew bootRun    # hvis Spring Boot benyttes
+./gradlew bootRun    # hvis Spring Boot
 ```
+
+**Autentiseringstips:**
+- **Claude Code:** `BROWSER=/bin/echo` gjør at URL skrives til terminalen — kopier og åpne i nettleseren på verten
+- **opencode:** bruker `ANTHROPIC_API_KEY` fra `.env` — ingen manuell login
+- **copilot:** bruker GitHub-legitimasjonen fra `gh auth login` — ingen ekstra steg
+
 ---
 
-## Autentisering
+## Fordeler og ulemper
 
-### Claude Code
+### Fordeler
+
+| | |
+|---|---|
+| **Nettverksisolasjon** | Agenten kan ikke nå vilkårlige internett-ressurser. Whitelisten er eksplisitt og enkel å revidere. |
+| **Ingen kode bakt inn** | Imaget er generisk — det samme imaget gjenbrukes på tvers av alle Java/Gradle-repoer. |
+| **Legitimasjon i volumer** | Tokens og nøkler lever utenfor kildekoden og overlever container-omstart. |
+| **Tre AI-verktøy i ett** | Claude Code (agentic), opencode (alternativ UI), copilot (CLI-spørsmål og forklaringer). |
+| **Live whitelist-endring** | Nytt domene kan legges til uten rebuild eller container-restart. |
+| **Reproduserbart** | Alle avhengigheter er pinnet i Dockerfile — samme image på alle maskiner. |
+
+### Ulemper
+
+| | |
+|---|---|
+| **Bygg tar tid** | `docker-compose build` laster ned JDK, Node.js, tre AI-verktøy — plan for 5–10 min ved første bygg. |
+| **Minnekrav** | Colima bør ha minst 8 GB for å kjøre JVM + AI-prosesser komfortabelt. |
+| **Whitelist-vedlikehold** | Nye tjenester (f.eks. private artifact-registre) krever manuell tillegg i `whitelist.conf`. |
+| **Ingen GUI** | Rent CLI-miljø — IDE-integrasjoner (VS Code Remote, IntelliJ Gateway) krever ekstra oppsett. |
+| **Statisk proxy-konfig** | Squid-proxyen er enkel — ingen autentisering, rate limiting eller detaljert logging per agent. |
+
+---
+
+## Veien videre
+
+**Nærmeste tiltak:**
+
+- [ ] Private artifact-registre (Nexus, Artifactory) — legg til domener i whitelist og evt. credentials i volum
+- [ ] IDE-integrasjon — VS Code Remote Containers eller IntelliJ Gateway mot `ai-dev`
+- [ ] Flere språk/byggverktøy — variant med Maven, Node.js-prosjekter, Python
+
+**Mer ambisiøst:**
+
+- [ ] Egendefinert proxy-policy per agent (f.eks. strengere regler for autonome kjøringer)
+- [ ] Auditlogg — strukturert logging av alle agenthandlinger (fil, git, nett)
+- [ ] CI-integrasjon — kjør agenten i en engangskontainer som del av PR-prosessen
+- [ ] Secrets-håndtering — integrasjon med Vault eller cloud-native secrets manager i stedet for `.env`
+
+---
+
+## Rask verifisering
 
 ```sh
-# Inne i containeren:
-claude
-# Følg instruksjonen — åpne URL-en på verten og lim inn koden
+# Kjør inne i ai-dev etter oppstart:
+claude --version       # Claude Code installert
+opencode --version     # opencode installert
+copilot --version      # GitHub Copilot CLI installert
+gh --version           # GitHub CLI installert
+
+curl -s --max-time 3 https://example.com          # → blokkert av proxy
+curl -s https://api.github.com/zen                # → returnerer et sitat
+
+docker logs dev-proxy | grep DENIED               # → viser blokkerte forsøk
 ```
-
-> **Tips:** Claude Code forsøker å åpne URL-en automatisk, men inne i containeren settes `BROWSER=/bin/echo` — URL-en skrives da ut i terminalen. Kopier den og åpne i nettleseren på verten.
-
-Legitimasjonen lagres i volumet `claude-auth` (`~/.claude`) og overlever container-omstart.
-
-### opencode
-
-opencode bruker `ANTHROPIC_API_KEY` fra miljøet. Sett nøkkelen i `.env`-filen:
-
-```
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-Konfigurasjonen lagres i volumet `opencode-config` (`~/.config/opencode`) og opprettes automatisk ved første oppstart.
-
-### copilot
-
-`copilot` bruker GitHub-legitimasjonen fra `gh auth login` — ingen separat autentisering nødvendig.
-
----
-
-## Volumer
-
-| Volum | Innhold |
-|-------|---------|
-| `repos` | Klonede repoer (`/repos`) |
-| `gradle-cache` | Gradle-cache (`~/.gradle`) |
-| `gh-auth` | GitHub-legitimasjon (`~/.config/gh`) |
-| `claude-auth` | Claude Code-legitimasjon (`~/.claude`) |
-| `opencode-config` | opencode-konfigurasjon (`~/.config/opencode`) |
-
----
-
-## Miljøvariabler
-
-| Variabel | Beskrivelse | Standardverdi |
-|----------|-------------|---------------|
-| `GIT_AUTHOR_NAME` | Git-brukernavn | `Dev` |
-| `GIT_AUTHOR_EMAIL` | Git-e-post | `dev@local` |
-| `ANTHROPIC_API_KEY` | Anthropic API-nøkkel (påkrevd for opencode) | — |
-| `GRADLE_PORT_1` | Vertsport → 8080 i container | `8080` |
-| `GRADLE_PORT_2` | Vertsport → 8081 i container | `8081` |
-
----
-
-## Nettverkswhitelist
-
-Tillatte domener er definert i `whitelist.conf`. Endre domener uten rebuild:
-
-```sh
-echo ".nyttdomene.com" >> whitelist.conf
-docker exec dev-proxy squid -k reconfigure
-```
-
----
-
-## Verifisering
-
-| Sjekk | Kommando | Forventet |
-|-------|----------|-----------|
-| Claude Code | `claude --version` | Skriver ut versjon |
-| opencode | `opencode --version` | Skriver ut versjon |
-| copilot | `copilot --version` | Skriver ut versjon |
-| GitHub CLI | `gh --version` | Skriver ut versjon |
-| Gradle-avhengigheter | `./gradlew dependencies` | Lastes ned via proxy |
-| Nettverksrestriksjon | `curl -s --max-time 3 https://example.com` | Blokkert av proxy |
-| GitHub nåbar | `curl -s https://api.github.com/zen` | Returnerer et sitat |
-| Proxy-logger | `docker logs dev-proxy \| grep DENIED` | Viser blokkerte forsøk |

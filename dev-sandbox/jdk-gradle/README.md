@@ -69,8 +69,8 @@ All trafikk fra `ai-dev` tvinges gjennom proxyen — Node.js (`undici`), Java (`
 **Forutsetninger:** Docker, `docker-compose` (og f.eks. Colima på Mac)
 
 ```sh
-# 0. [Vertsmaskin] Gi nok minne til container-tjenesten
-colima start --memory 8
+# 0. [Vertsmaskin] Gi nok minne og diskplass til container-tjenesten. Diskplass er hvis du kjører lokale modeller
+colima start --memory 8 --disk 100
 ```
 
 ```sh

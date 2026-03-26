@@ -28,24 +28,28 @@ graph TD
 
     host -->|"./dev.sh"| aidev
     host -->|"automatisk"| proxy
+    host -->|"docker exec ollama ollama pull"| ollama
 
     aidev -->|"HTTP_PROXY :3128"| proxy
+    aidev -->|"NO_PROXY / direkte"| ollama
     proxy -->|"internett"| internet["🌐 Internett"]
 
     subgraph proxy-net ["proxy-net (internt Docker-nettverk)"]
         aidev["<b>ai-dev</b><br/>JDK 25 · Gradle<br/>Claude Code · opencode · copilot<br/>gh · git"]
         proxy["<b>dev-proxy</b><br/>Squid<br/>─────────────<br/>✓ *.anthropic.com / claude.ai<br/>✓ *.github.com / *.githubcopilot.com<br/>✓ Maven Central · Gradle repos<br/>✗ alt annet"]
+        ollama["<b>ollama</b><br/>Ollama<br/>─────────────<br/>Lokale LLM-modeller"]
     end
 ```
 
-**To containere, to nettverk:**
+**Tre containere, to nettverk:**
 
 | Container | Rolle | Nettverkstilgang |
 |-----------|-------|-----------------|
 | `ai-dev` | Utviklingsmiljø | Kun `proxy-net` (internt) |
 | `dev-proxy` | Squid-proxy | `proxy-net` + `external-net` (internett) |
+| `ollama` | Lokal LLM-tjener | `proxy-net` + `external-net` (internett for modell-nedlasting) |
 
-All trafikk fra `ai-dev` tvinges gjennom proxyen — Node.js (`undici`), Java (`GRADLE_OPTS`), og curl/wget via `HTTP_PROXY`/`HTTPS_PROXY`.
+All trafikk fra `ai-dev` tvinges gjennom proxyen — Node.js (`undici`), Java (`GRADLE_OPTS`), og curl/wget via `HTTP_PROXY`/`HTTPS_PROXY`. Unntak: `ollama` er listet i `NO_PROXY` og nås direkte container-til-container.
 
 **Persistens i Docker-volumer:**
 
@@ -56,6 +60,7 @@ All trafikk fra `ai-dev` tvinges gjennom proxyen — Node.js (`undici`), Java (`
 | `gh-auth` | GitHub-legitimasjon |
 | `claude-auth` | Claude Code-legitimasjon |
 | `opencode-config` | opencode-konfigurasjon |
+| `ollama-models` | Nedlastede LLM-modeller |
 
 ---
 
@@ -117,6 +122,65 @@ copilot       # Allerede logget på med gh auth login
 
 ---
 
+## Ollama — lokale LLM-modeller
+
+Sandkassen inkluderer en `ollama`-container på `proxy-net` som lar deg kjøre lokale språkmodeller uten internett-tilgang fra `ai-dev`. Modellene lagres i et eget Docker-volum og overlever container-omstart.
+
+### Starte Ollama
+
+`ollama`-containeren er valgfri og startes separat fra resten av sandkassen:
+
+```sh
+# [Vertsmaskin] Start Ollama-containeren
+docker-compose up -d ollama
+```
+
+### Laste ned en modell
+
+`ollama`-containeren har tilgang til `external-net` slik at den kan laste ned modeller direkte:
+
+```sh
+# [Vertsmaskin] Last ned en modell (lagres i ollama-models-volumet)
+docker exec ollama ollama pull qwen3-coder-next
+
+# Andre eksempler
+docker exec ollama ollama pull qwen3-coder          # 19 GB
+docker exec ollama ollama pull llama3.3             # 43 GB
+```
+
+> Modeller kan være mange titalls GB. Nedlastingen skjer kun én gang — volumet bevarer dem mellom omstarter.
+
+### Bruke Ollama fra ai-dev
+
+`ai-dev` når Ollama direkte på `http://ollama:11434` (omgår proxyen via `NO_PROXY`). opencode er forhåndskonfigurert med Ollama som provider:
+
+```sh
+# [ai-dev] Bruk opencode med en lokal modell
+opencode --model ollama/qwen3-coder-next
+
+# [ai-dev] List tilgjengelige modeller
+curl http://ollama:11434/api/tags
+
+# [ai-dev] Kall API-et direkte
+curl http://ollama:11434/api/generate -d '{
+  "model": "qwen3-coder-next",
+  "prompt": "Forklar denne Java-koden",
+  "stream": false
+}'
+```
+
+### Verifisering
+
+```sh
+# [Vertsmaskin] Sjekk at Ollama kjører
+docker ps | grep ollama
+
+# [ai-dev] Bekreft at modellen er tilgjengelig
+curl -s http://ollama:11434/api/tags | jq '.models[].name'
+```
+
+---
+
 ## Fordeler og ulemper
 
 ### Fordeler
@@ -127,6 +191,7 @@ copilot       # Allerede logget på med gh auth login
 | **Ingen kode bakt inn** | Imaget er generisk — det samme imaget gjenbrukes på tvers av alle Java/Gradle-repoer. |
 | **Legitimasjon i volumer** | Tokens og nøkler lever utenfor kildekoden og overlever container-omstart. |
 | **Tre AI-verktøy i ett** | Claude Code (agentic), opencode (alternativ UI), copilot (CLI-spørsmål og forklaringer). |
+| **Lokale modeller** | Ollama på `proxy-net` gir tilgang til lokale LLM-er uten at modelltrafikk forlater maskinen. |
 | **Live whitelist-endring** | Nytt domene kan legges til uten rebuild eller container-restart. |
 | **Reproduserbart** | Alle avhengigheter er pinnet i Dockerfile — samme image på alle maskiner. |
 
@@ -172,4 +237,7 @@ curl -s --max-time 3 https://example.com          # → blokkert av proxy
 curl -s https://api.github.com/zen                # → returnerer et sitat
 
 docker logs dev-proxy | grep DENIED               # → viser blokkerte forsøk
+
+# Ollama (hvis startet):
+curl -s http://ollama:11434/api/tags              # → liste over nedlastede modeller
 ```

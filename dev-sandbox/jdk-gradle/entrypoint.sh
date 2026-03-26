@@ -6,7 +6,17 @@ if [ ! -f "$OPENCODE_CONFIG" ]; then
   mkdir -p "$(dirname "$OPENCODE_CONFIG")"
   cat > "$OPENCODE_CONFIG" <<'EOF'
 {
-  "model": "anthropic/claude-sonnet-4-6"
+  "model": "anthropic/claude-sonnet-4-6",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://ollama:11434/v1"
+      },
+      "models": {}
+    }
+  }
 }
 EOF
   echo "[ai-dev] Created default opencode config."

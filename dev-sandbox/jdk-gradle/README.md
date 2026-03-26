@@ -152,7 +152,7 @@ docker exec ollama ollama pull llama3.3             # 43 GB
 
 ### Bruke Ollama fra ai-dev
 
-`ai-dev` når Ollama direkte på `http://ollama:11434` (omgår proxyen via `NO_PROXY`). `OLLAMA_HOST` er satt som miljøvariabel, så opencode finner Ollama automatisk:
+`ai-dev` når Ollama direkte på `http://ollama:11434/v1` (omgår proxyen via `NO_PROXY`). opencode er forhåndskonfigurert med Ollama som provider:
 
 ```sh
 # [ai-dev] Bruk opencode med en lokal modell

@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-gh copilot -- -p "$(cat /usr/local/share/claude-skills/catalog-info.md)" --allow-all-tools

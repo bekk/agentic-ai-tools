@@ -48,9 +48,7 @@ RUN ARCH=$(uname -m) && \
 RUN git config --global --add safe.directory '*'
 RUN mkdir /repos
 WORKDIR /repos
-COPY skills/ /usr/local/share/claude-skills/
-COPY skills/bin/ /usr/local/bin/
-RUN chmod +x /usr/local/bin/catalog-info-opencode /usr/local/bin/catalog-info-copilot
+COPY skills/ /usr/local/share/skills/
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 EXPOSE 8080 8081

@@ -1,3 +1,8 @@
+---
+name: catalog-info
+description: Analyse the codebase and create or update catalog-info.yaml for Backstage
+---
+
 Analyse the codebase in the current working directory and create or update `catalog-info.yaml` for Backstage.
 
 ## Phase 1 — Read existing state

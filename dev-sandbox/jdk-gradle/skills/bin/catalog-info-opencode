@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+opencode --prompt "$(cat /usr/local/share/claude-skills/catalog-info.md)"

@@ -25,10 +25,10 @@ else
   echo "[ai-dev] Ollama not reachable — no models registered. Restart ai-dev after starting Ollama."
 fi
 
-# Install Claude Code skills (copy from image into the persistent claude-auth volume)
-if [ -d /usr/local/share/claude-skills ]; then
-  mkdir -p /root/.claude/commands
-  cp /usr/local/share/claude-skills/*.md /root/.claude/commands/ 2>/dev/null || true
+# Install skills into ~/.claude/skills/ — discovered by Claude Code, opencode, and gh copilot
+if [ -d /usr/local/share/skills ]; then
+  mkdir -p /root/.claude/skills
+  cp -r /usr/local/share/skills/. /root/.claude/skills/
 fi
 
 exec "$@"

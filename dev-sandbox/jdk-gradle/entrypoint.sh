@@ -26,9 +26,9 @@ else
 fi
 
 # Install skills into ~/.claude/skills/ — discovered by Claude Code, opencode, and gh copilot
-if [ -d /usr/local/share/skills ]; then
+if [ -d /opt/skills ]; then
   mkdir -p /root/.claude/skills
-  cp -r /usr/local/share/skills/. /root/.claude/skills/
+  cp -r /opt/skills/. /root/.claude/skills/
 fi
 
 exec "$@"

@@ -14,6 +14,8 @@ if ! docker ps --format '{{.Names}}' | grep -q "^dev-proxy$"; then
   echo "[$CONTAINER] Proxy ready."
 fi
 
+docker rm -f "$CONTAINER" 2>/dev/null || true
+
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
   echo "[$CONTAINER] Starting container..."
   docker-compose $ENV_FILE_ARG -f "$COMPOSE_FILE" run \

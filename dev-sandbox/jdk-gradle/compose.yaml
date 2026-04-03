@@ -11,16 +11,6 @@ services:
       - external-net
     restart: unless-stopped
 
-  ollama:
-    image: ollama/ollama
-    container_name: ollama
-    networks:
-      - proxy-net
-      - external-net
-    volumes:
-      - ollama-models:/root/.ollama
-    restart: unless-stopped
-
   dev:
     build:
       context: .
@@ -35,13 +25,13 @@ services:
       - HTTPS_PROXY=http://dev-proxy:3128
       - http_proxy=http://dev-proxy:3128
       - https_proxy=http://dev-proxy:3128
-      - NO_PROXY=localhost,127.0.0.1,ollama
-      - no_proxy=localhost,127.0.0.1,ollama
+      - NO_PROXY=localhost,127.0.0.1,host.docker.internal
+      - no_proxy=localhost,127.0.0.1,host.docker.internal
       - GRADLE_OPTS=-Dhttps.proxyHost=dev-proxy -Dhttps.proxyPort=3128 -Dhttp.proxyHost=dev-proxy -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=localhost|127.0.0.1
       - NODE_OPTIONS=--import /usr/local/lib/node-proxy/bootstrap.mjs
       - BROWSER=/bin/echo
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_HOST=http://host.docker.internal:11434
     ports:
       - "${GRADLE_PORT_1:-8080}:8080"
       - "${GRADLE_PORT_2:-8081}:8081"
@@ -51,6 +41,8 @@ services:
       - gh-auth:/root/.config/gh
       - claude-auth:/root/.claude
       - opencode-config:/root/.config/opencode
+    extra_hosts:
+      - host.docker.internal:host-gateway
     networks:
       - proxy-net
     stdin_open: true
@@ -69,4 +61,3 @@ volumes:
   gh-auth:
   claude-auth:
   opencode-config:
-  ollama-models:

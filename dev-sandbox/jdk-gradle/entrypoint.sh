@@ -8,14 +8,14 @@ if [ ! -f "$OPENCODE_CONFIG" ]; then
   echo "[ai-dev] Created default opencode config."
 fi
 
-OLLAMA_MODELS=$(curl -sf --max-time 3 http://ollama:11434/v1/models 2>/dev/null \
+OLLAMA_MODELS=$(curl -sf --max-time 3 "${OLLAMA_HOST}/v1/models" 2>/dev/null \
   | jq 'reduce .data[].id as $id ({}; .[$id] = {"name": $id, "tools": true})' 2>/dev/null \
   || echo '{}')
 
-jq --argjson models "$OLLAMA_MODELS" '.provider.ollama = {
+jq --argjson models "$OLLAMA_MODELS" --arg baseurl "${OLLAMA_HOST}/v1" '.provider.ollama = {
   "npm": "@ai-sdk/openai-compatible",
   "name": "Ollama (local)",
-  "options": { "baseURL": "http://ollama:11434/v1" },
+  "options": { "baseURL": $baseurl },
   "models": $models
 }' "$OPENCODE_CONFIG" > /tmp/opencode.tmp && mv /tmp/opencode.tmp "$OPENCODE_CONFIG"
 

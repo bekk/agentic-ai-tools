@@ -18,6 +18,7 @@ services:
       - host.docker.internal:host-gateway
     networks:
       - proxy-net
+      - external-net
     restart: unless-stopped
 
   dev:

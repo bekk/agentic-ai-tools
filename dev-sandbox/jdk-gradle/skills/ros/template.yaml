@@ -1,0 +1,2257 @@
+schemaVersion: '5.2'
+title: Initiell RoS 2.1 SaaS-tjeneste
+scope: >-
+  Denne RoS'en inneholder scenarier som bør vurderes for eksterne
+  SaaS-tjenester. DEN ER IKKE KOMPLETT, men et utgangspunkt for teamet til å
+  gjøre sine egne vurderinger.
+scenarios:
+  - title: Produktet følger ikke lovpålagte krav​
+    scenario:
+      ID: po6Ft
+      description: >-
+        Det kan finnes krav fra lovgiver eller tilsynsmyndighet som ikke er
+        forstått riktig eller ikke implementert. Det kan være generelle eller
+        produktspesifikke lovverk eller forskrifter eller ulovlighet
+        identifisert i tilsyn
+      threatActors:
+        - Reckless employee
+      vulnerabilities:
+        - Flawed design
+      risk:
+        probability: 1
+        consequence: 3200000
+      actions:
+        - title: Inngå databehandleravtaler
+          action:
+            ID: mbZYe
+            description: >-
+              Utarbeid og inngå databehandleravtale og overføringsgrunnlag for
+              persondata med sky- og andre underleverandører.
+
+
+              ```
+
+              Internt metodeverk:   AR-010
+
+              ISO 27002:            5.34
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Gjør avsjekk mot lovverk
+          action:
+            ID: gznen
+            description: >-
+              Gjør sjekk av at produktet oppfyller relevante lover og
+              forskrifter for produktet, som sikkerhetsloven,
+              personopplysningsloven, matrikkelloven, utleveringsforskriften
+
+
+              ```
+
+              Internt metodeverk:   AR-017
+
+              ISO 27002:            5.31, 5.36
+
+              NIST CSF 2.0:         GV.OC-03, GV.SC-01
+
+              OWASP ASVS 4.0.3:     V1.5.1
+
+              NSMs grunnprinsipper: 3.2.2
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Ha personvernerklæring
+          action:
+            ID: uxg3B
+            description: >-
+              Ha informasjon som viser brukere hvordan persondata blir behandlet
+              og hvilke rutiner som gjelder for opprettelse, vedlikehold og
+              sletting av data
+
+
+              ```
+
+              Internt metodeverk:   UT-160
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Gi innsyn i persondata
+          action:
+            ID: HgX3r
+            description: >-
+              Brukeren skal ha mulighet til å be om innsyn i egne persondata.
+              Det kan skje manuelt
+
+
+              ```
+
+              Internt metodeverk:   UT-161
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Varsling og eskalering ved hendelser
+          action:
+            ID: aoEJi
+            description: >-
+              Teamet skal ha klare rutiner for hvem som skal varsles ved ulike
+              typer hendelser og kritikalitetsnivåer, og hvilke
+              kommunikasjonskanaler som skal benyttes. Varslingsprosessen skal
+              dekke både intern eskalering av alvorlige hendelser og nødvendig
+              informasjon til berørte interne eller eksterne parter. Rutinen
+              skal være dokumentert, testet og kjent for alle som inngår i
+              prosessen, slik at varsling kan gjennomføres raskt og presist i
+              tråd med gjeldende regulatoriske krav og tjenestenivåkrav.
+
+
+              ```
+
+              Internt metodeverk:   HH-178
+
+              ISO 27002:
+
+              NIST CSF 2.0:         RS.MA-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.3, 4.1.4, 4.1.6, 3.3.6
+
+              Sikkerhetsloven:      § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Etabler og vedlikehold et helhetlig system for hendelseshåndtering
+          action:
+            ID: RcuGz
+            description: >-
+              Sørg for å det etablere, drifte og kontinuerlig forbedre et
+              helhetlig hendelseshåndteringssystem som omfatter deteksjon,
+              analyse, respons, kommunikasjon, rapportering og gjenoppretting
+              for hendelser av alle kritikalitetsnivåer.
+
+
+              Hendelseshåndteringssystemet skal inkludere klare kriterier for
+              aktivering av driftskontinuitetsplaner, definert
+              eskaleringslogikk, samt prosedyrer for varsling av interne og
+              eksterne parter, herunder tredjeparter, tilsynsmyndigheter,
+              Datatilsynet og virksomhetens eier der dette er relevant.
+
+
+              ```
+
+              Internt metodeverk:   HH-019
+
+              ISO 27002:            5.1, 5.6, 5.25, 5.26, 5.24, 6.8
+
+              NIST CSF 2.0:         GV.RM-04, GV.RM-05, ID.RA-06, DE.AE-02,
+              DE.AE-06, DE.AE-08, ID.RA-08, DE.AE-04, DE.AE-07, RS.MA-02,
+              RS.MA-03, RS.MA-04, RS.MA-05, RS.AN-03, RS.AN-06, RS.AN-07,
+              RS.AN-08, RC.CO-04, GV.SC-08, ID.IM-03, GV.SC-02, GV.SC-03,
+              RS.MA-01, RC.RP-01, RC.RP-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 3.3.6, 4.1.1, 4.1.2, 4.1.3, 4.1.4, 4.1.5,
+              4.1.6, 4.2, 4.2.2, 4.2.3, 4.3, 4.3.5, 4.3.3
+
+              Sikkerhetsloven:      § 2-4, § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 3200000
+  - title: Produktet følger ikke interne retningslinjer​
+    scenario:
+      ID: yLIyq
+      description: >-
+        Det kan finnes krav fra organisasjonen selv som ikke er forstått riktig
+        eller ikke implementert. Eksempler er at utviklingsprosessen inneholder
+        krav til innebygd sikkerhet/personvern, dokumentasjon på gitt sted eller
+        format, eller sjekklister, håndbøker eller standarder som skal følges
+      threatActors:
+        - Reckless employee
+      vulnerabilities:
+        - Flawed design
+      risk:
+        probability: 1
+        consequence: 160000
+      actions:
+        - title: Gjør avsjekk med eier
+          action:
+            ID: ydsnZ
+            description: >-
+              Ta avsjekk med og få godkjenning av departmentet for
+              sikkerhetstilnærming, budsjetter og tolkning av lover og regelverk
+
+
+              ```
+
+              Internt metodeverk:   AR-015
+
+              ISO 27002:            5.5, 5.31, 5.36
+
+              NIST CSF 2.0:         GV.SC-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:      § 4-5, § 6-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Gjør avsjekk med tilsyn
+          action:
+            ID: oKzb1
+            description: >-
+              Ta avsjekk med og få godkjenning av NSM (evt annet tilsyn) om
+              sikkerhetstiltak, vurdering av skjermingsverdighet og
+              graderingsnivå av opplysninger, inngåtte avtaler med tredjeparter
+              og overordnete løsningsvalg
+
+
+              ```
+
+              Internt metodeverk:   AR-016
+
+              ISO 27002:            5.5, 5.31, 5.35, 5.36
+
+              NIST CSF 2.0:         GV.SC-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:      § 4-5, § 6-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Tildel sikkerhetsroller
+          action:
+            ID: BaTVj
+            description: >-
+              Klargjør og beskriv roller og ansvar knyttet til
+              informasjonssikkerhet knyttet til produktet, inklusive opplæring,
+              sikkerhetsansvarlig og kontaktpersoner, eskalering ved hendelser
+              etc
+
+
+              ```
+
+              Internt metodeverk:   AR-004
+
+              ISO 27002:            5.2, 5.3
+
+              NIST CSF 2.0:         GV.RR-02, GV.SC-02, GV.RR-01, RS.CO-03,
+              RS.CO-02, GV.RR-03, GV.RM-05, ID.IM-04, PR.AT-01, PR.AT-02,
+              RS.MA-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.2, 1.3.3, 2.10.2, 2.10.4
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Ha Security Champion
+          action:
+            ID: CaSz8
+            description: >-
+              Ha en Security champion i teamet. Rollen er først og fremst å være
+              teamets kontaktperson for sikkerhetsproblemstillinger, ikke
+              eneansvarlig for sikkerheten.
+
+
+              ```
+
+              Internt metodeverk:   UT-023
+
+              ISO 27002:            5.2
+
+              NIST CSF 2.0:         PR.AT-02, PR.AT-01, GV.RR-01, GV.RR-02,
+              GV.RR-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.5, 2.1.8, 1.1.2, 2.10.1, 2.10.4
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Vedlikehold produkt- og systemdokumentasjon
+          action:
+            ID: OOF4a
+            description: >-
+              Teamet skal sørge for at produktets dokumentasjon, inkludert
+              README, arkitektur- og designbeskrivelser (ADR),
+              systemdokumentasjon og brukerdokumentasjon, oppdateres ved
+              relevante endringer i produktet. Dokumentasjonen skal være
+              tilstrekkelig, korrekt og tilgjengelig for de som trenger den, og
+              vedlikeholdes som en integrert del av produktutviklings- og
+              endringsprosessene. Kontrollen anses oppfylt når teamet har
+              etablert og følger rutiner som sikrer at dokumentasjonen
+              gjennomgås og oppdateres regelmessig, og at endringer kan spores
+              og revideres.
+
+
+              ```
+
+              Internt metodeverk:   UT-046
+
+              ISO 27002:            5.37, 8.32
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:     V1.1.4, V1.11.1
+
+              NSMs grunnprinsipper: 3.2.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Oppdater RoS/IP/DPIA
+          action:
+            ID: SGjnH
+            description: >-
+              Sørg for at RoS og IP og evt DPIA etablert og oppdatert sammen med
+              kodeendring. Kontrolleren er oppfylt når teamet har etablert
+              rutiner som sikrer dette
+
+
+              RoS for produktet og produktets komponenter bør revurderes hver
+              3-6 måned, og oftere hvis det skjer mange endringer. Vær spesielt
+              oppmerksom på endringer i endepunkter, integrasjoner,
+              avhengigheter og brukergrupper. Punktet er oppfylt når rutine for
+              revurdering er etablert.
+
+
+              RoS skal godkjennes av produktets risikoeier. En del av
+              vurderingen av dette punktet, er å vite hvem det er.
+
+
+              ```
+
+              Internt metodeverk:   UT-047
+
+              ISO 27002:            5.34, 8.32
+
+              NIST CSF 2.0:         ID.AM-05, GV.RM-06, GV.SC-03, GV.SC-07,
+              ID.RA-03, ID.RA-04, DE.AE-04
+
+              OWASP ASVS 4.0.3:     V1.1.2, V8.3.3, V8.3.4
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Oppdater API-dok
+          action:
+            ID: oZl5k
+            description: >-
+              Oppdatere OpenAPI-dokumentasjon eller liknende hvor det er
+              relevant, inklusive kontrakter, dataformat og metadata (se
+              UT-032). Kontrolleren er oppfylt når teamet har etablert rutiner
+              som sikrer dette
+
+
+              ```
+
+              Internt metodeverk:   UT-048
+
+              ISO 27002:            8.32
+
+              NIST CSF 2.0:         ID.AM-07, ID.AM-02, ID.AM-05
+
+              OWASP ASVS 4.0.3:     V1.11.1
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Oppdater utviklerportal
+          action:
+            ID: Z9xV6
+            description: >-
+              Oppdatert informasjon i intern utviklerportal, inkl
+              API-dokumentasjon og 3. partstjenester. Kontrolleren er oppfylt
+              når teamet har etablert rutiner som sikrer dette
+
+
+              ```
+
+              Internt metodeverk:   UT-049
+
+              ISO 27002:            5.9, 8.9, 8.32
+
+              NIST CSF 2.0:         ID.AM-04, ID.AM-05, ID.AM-02, ID.AM-08
+
+              OWASP ASVS 4.0.3:     V1.1.4, V1.11.1
+
+              NSMs grunnprinsipper: 1.1.5, 1.1.6
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Bestem driftskontinuitet produkt
+          action:
+            ID: Uqqpm
+            description: >-
+              Etabler hvilke driftskontinuitetskrav som gjelder for ulike
+              funksjoner/underfunksjoner i produktet og for ulike nivåer av
+              problemer knyttet til funksjonene, dvs krav til
+              gjenopprettelsetid/-punkter
+
+
+              **Mål for gjennopprettelsestid** også kalt 'Recovery Time
+              Objective' (RTO), måler hvor lang tid tjenesten maksimalt kan være
+              utilgjengelig før den er oppe igjen. Det er mulig å ha ulike mål
+              avhengig av hvilke scenarier som inntreffer. Begrensede
+              hardware-problemer kan ha strengere RTO-krav enn en voldsom
+              naturkatastrofe.
+
+
+              **Mål for gjenopprettelsespunkt** også kalt 'Recovery Point
+              Objective1, måler hvor mye data organisasjonen maksimalt kan tåle
+              å miste, enten målt i datamengde eller i tid. Hyppigheten det tas
+              backup av dataene er et eksempel på et virkemiddel for å kunne
+              møte et RPO-krav.
+               (RTO/RPO)
+
+              ```
+
+              Internt metodeverk:   AR-163
+
+              ISO 27002:            5.30, 5.29
+
+              NIST CSF 2.0:         ID.AM-05, PR.IR-03, PR.IR-04, DE.CM-01,
+              RS.MI-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.3.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Løs tiltak fra RoS/IP/DPIA
+          action:
+            ID: WBTYu
+            description: >-
+              Gjennomfør tiltak identifisert i RoS og IP/DPIA, f.eks ved
+              opprette oppgaver og prioritere dem inn i teamets arbeidsflyt
+
+
+              ```
+
+              Internt metodeverk:   UT-041
+
+              ISO 27002:            5.34
+
+              NIST CSF 2.0:         ID.RA-06
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.8
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Definer funksjonshierarki
+          action:
+            ID: MejRj
+            description: >-
+              Vedlikehold en oversikt over funksjonene produktet leverer, og
+              hvilke underfunksjoner de består av. Funksjoner- og
+              underfunksjoner kan ha ulike interessenter, sikkerhets-,
+              tjenestenivå- og driftskontinuitetskrav
+
+
+              ```
+
+              Internt metodeverk:   AR-162
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Identifiser eksterne interessenter
+          action:
+            ID: KCqWX
+            description: >-
+              Identifiser sentrale eksterne interessenter og deres behov for
+              funksjoner i produktet, f.eks i form av HUKI-matrise
+
+
+              ```
+
+              Internt metodeverk:   AR-172
+
+              ISO 27002:            5.4
+
+              NIST CSF 2.0:         GV.OC-02, RS.CO-02, RS.CO-03, RC.CO-04,
+              GV.RM-05, ID.IM-04, RS.MA-01, GV.SC-02, GV.SC-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:      § 2-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Vedlikehold sikkerhetshåndbok
+          action:
+            ID: nKui7
+            description: >-
+              Sørg for at sikkerhetshåndboka inneholder oppsummering av de
+              viktigste sikkerhetsaktivitetene produktteamet skal forholde seg
+              tiltak, og peker videre til grundigere beskrivelse av hver
+              aktivitet
+
+
+              ```
+
+              Internt metodeverk:   AR-173
+
+              ISO 27002:
+
+              NIST CSF 2.0:         GV.PO-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Identifiser interne interessenter
+          action:
+            ID: 8kHHC
+            description: >-
+              Identifiser sentrale interne interessenter og deres behov for
+              funksjoner i produktet, f.eks i form av HUKI-matrise
+
+
+              ```
+
+              Internt metodeverk:   AR-002
+
+              ISO 27002:            5.4
+
+              NIST CSF 2.0:         GV.OC-02, RS.CO-02, RS.CO-03, RC.CO-04,
+              RS.MA-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:      § 2-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Del produkt-misjon
+          action:
+            ID: Qunvx
+            description: >-
+              Sørg for at team og øvrig organisasjon forstår
+              produktets/tjenestens hensikt og verdier. Trekk grenser mot andre
+              produkter/tjenester, og vær tydelig på hva som IKKE er
+              hensikt/oppgave med produktet
+
+
+              ```
+
+              Internt metodeverk:   AR-001
+
+              ISO 27002:
+
+              NIST CSF 2.0:         GV.OC-01, GV.OC-03, GV.SC-05, GV.SC-07
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.1, 1.1.5, 1.1.6
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 160000
+  - title: >-
+      Trusselaktør utnytter sårbarheter i tredjepartskomponenter til å skade
+      produktet​
+    scenario:
+      ID: cik24
+      description: >-
+        En trusselaktør utnytter feil eller mangler i kode, biblioteker eller
+        produkter hentet utenfra til å endre informasjon eller klientopplevelsen
+        på en måte som villeder eller fremtvinger en oppførsel som er i
+        trusselaktørens interesse.
+      threatActors:
+        - Script kiddie
+      vulnerabilities:
+        - Dependency vulnerability
+        - Misconfiguration
+      risk:
+        probability: 1
+        consequence: 64000000
+      actions:
+        - title: Følg eksterne sårbarheter
+          action:
+            ID: S8wnO
+            description: >-
+              Vær medlem av hendelse-forum og bli varslet når sårbarheter
+              oppdages andre steder
+
+
+              ```
+
+              Internt metodeverk:   OV-058
+
+              ISO 27002:            5.7, 8.7
+
+              NIST CSF 2.0:         ID.RA-02, ID.RA-08, DE.AE-07
+
+              OWASP ASVS 4.0.3:     V1.14.3, V14.2.4, V14.2.5
+
+              NSMs grunnprinsipper: 3.1.2, 3.3.4, 3.1.1, 3.2
+
+              Sikkerhetsloven:      § 2-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Detekter nye sårbarheter
+          action:
+            ID: HbQbY
+            description: >-
+              Detekter nye sårbarheter gjennom automatisert scanning av
+              kildekode, avhengigheter og kjørende komponenter: Sårbarheter på
+              kritisk og høyt nivå bør utløse alarmer og håndteres umiddelbart
+
+
+              ```
+
+              Internt metodeverk:   OV-057
+
+              ISO 27002:            8.7, 8.8, 8.16
+
+              NIST CSF 2.0:         ID.RA-08, ID.RA-01
+
+              OWASP ASVS 4.0.3:     V1.14.3, V10.1.1, V10.2.1, V10.2.2, V10.2.3,
+              V10.2.4, V10.2.5, V10.2.6, V14.2.4, V14.2.5
+
+              NSMs grunnprinsipper: 3.1, 3.1.1, 3.1.3
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Skru på sårbarhetsanalyse
+          action:
+            ID: HSU8e
+            description: >-
+              Skru på kode- og sårbarhetsanalyseverktøy, og ha rutiner for å
+              følge opp sårbarhetsrapporter fra verktøyene. Benytt både statiske
+              (SAST) og dynamiske scannere (DAST).
+
+
+              Eksempler på statiske scannere er Dependabot, Pharos/Trivy, CodeQL
+              og Sysdig,
+
+
+              ```
+
+              Internt metodeverk:   UT-036
+
+              ISO 27002:            8.7, 8.8
+
+              NIST CSF 2.0:         ID.RA-01
+
+              OWASP ASVS 4.0.3:     V1.14.3, V5.5.2, V5.5.3, V5.5.4, V5.4.2,
+              V5.4.3, V5.4.1, V5.3.10, V5.3.9, V5.3.8, V5.3.7, V5.3.6, V5.3.5,
+              V5.3.4, V5.3.3, V5.3.2, V5.5.1, V6.3.2, V6.3.1, V6.3.3, V7.1.2,
+              V10.1.1, V10.2.1, V10.2.2, V10.2.3, V10.2.4, V10.2.5, V10.2.6,
+              V11.1.1, V11.1.2, V11.1.3, V11.1.4, V11.1.5, V14.1.1, V14.2.1,
+              V13.1.3
+
+              NSMs grunnprinsipper: 2.10.1, 3.1.3
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Løs nye sårbarheter
+          action:
+            ID: Qewl6
+            description: >-
+              Adresser nye sårbarheter når de oppstår. Kritiske og alvorlige
+              sårbarheter må tas tak i umiddelbart
+
+
+              ```
+
+              Internt metodeverk:   UT-042
+
+              ISO 27002:            8.7, 8.8
+
+              NIST CSF 2.0:         ID.RA-06
+
+              OWASP ASVS 4.0.3:     V1.14.6
+
+              NSMs grunnprinsipper: 2.1.8, 3.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 3200000
+  - title: Trusselaktør reduserer tjenestenivået eller øker kostnadene til produktet​
+    scenario:
+      ID: 3ztwU
+      description: >-
+        En trusselaktør kan redusere tjenestenivået eller øke driftskostnader
+        ved å angripe omkringliggende økosystem, eller bruke tjenesten i et
+        omfang eller på en måte den ikke er designet for. Angrepet kan være
+        rettet mot dataprodukter (lesetilgang) og grensesnitt for klienter
+        (lese- og skrivetilgang). Tiltak bør iverksettes for å sikre at
+        tjeneste- og kostnadsnivået opprettholdes på et akseptabelt nivå.
+      threatActors:
+        - Hacktivist
+        - Terrorist organisation
+        - Organised crime
+      vulnerabilities:
+        - Excessive use
+        - Unmonitored use
+      risk:
+        probability: 20
+        consequence: 160000
+      actions:
+        - title: Test ytelse
+          action:
+            ID: Ricpy
+            description: >-
+              Gjennomfør ytelsestesting. Også med bakgrunnslast på plattform
+              tilsvarende øvrige tjenester
+
+
+              ```
+
+              Internt metodeverk:   TE-066
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.7
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Skru på intern helsesjekk
+          action:
+            ID: oo5xg
+            description: >-
+              Ha helsesjekk av/alarmer for kjørende avhengigheter, f.eks
+              database, nettverk og tredjeparterstjenester. Loggføres og
+              vurderes opp mot hendelser og tjenestenivå-krav
+
+
+              ```
+
+              Internt metodeverk:   OV-059
+
+              ISO 27002:            8.16
+
+              NIST CSF 2.0:         DE.CM-01, DE.CM-02
+
+              OWASP ASVS 4.0.3:     V9.2.5
+
+              NSMs grunnprinsipper: 2.3.1, 2.3.3
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Skru på ekstern helsesjekk
+          action:
+            ID: 0xYuA
+            description: >-
+              Sett opp en ekstern helsesjekk av tjenester som er tilgjengelig
+              utenfra. Resultatene bør loggføres, slik at de kan brukes til
+              vurdering opp mot hendelser og tjenestenivåavtaler. Sett
+              alarmnivåer, slik at unormale nivåer trigger oppfølging av
+              ansvarlig vakt
+
+
+              ```
+
+              Internt metodeverk:   OV-060
+
+              ISO 27002:            8.16
+
+              NIST CSF 2.0:         DE.CM-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.3.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Test katastrofeløsning
+          action:
+            ID: jApS9
+            description: >-
+              Sjekk at produktet kan kjøre i katastrofeløsning hvis
+              driftskontinuitetskravene krever det. Det vil for eksempel
+              inkludere å bygge opp database fra bunnen av med backup-data.
+
+
+              ```
+
+              Internt metodeverk:   TE-069
+
+              ISO 27002:            5.29
+
+              NIST CSF 2.0:         ID.IM-02, RC.RP-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.6
+
+              Sikkerhetsloven:      § 4-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Etabler og vedlikehold vaktordning for produktet
+          action:
+            ID: AVnap
+            description: >-
+              Det skal etableres og vedlikeholdes en vaktordning for produktet
+              som sikrer at hendelser håndteres innenfor gjeldende
+              tjenestenivåkrav.
+
+
+              Vaktordningen skal ha tydelig ansvarsfordeling og definerte
+              eskaleringsrutiner mellom 1., 2. og 3. linje-support, inkludert
+              aktivering av tekniske og tjenestemessige ressurser ved behov.
+
+
+              Ordningen skal være dokumentert, testet og forankret med de
+              enhetene som inngår i vaktløpet.
+
+
+              ```
+
+              Internt metodeverk:   HH-020
+
+              ISO 27002:            5.1, 5.2, 5.30, 8.16
+
+              NIST CSF 2.0:         GV.OC-04, PR.IR-03, PR.IR-04, DE.CM-01,
+              RS.MA-01, RS.MA-02, RS.CO-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.1, 2.1.2, 3.3.6, 4.1.1, 4.1.2, 4.1.3,
+              4.1.4, 4.1.5, 4.1.6, 4.2.2, 4.2.3
+
+              Sikkerhetsloven:      § 2-4, § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Etabler og vedlikehold et helhetlig system for hendelseshåndtering
+          action:
+            ID: RcuGz
+            description: >-
+              Sørg for å det etablere, drifte og kontinuerlig forbedre et
+              helhetlig hendelseshåndteringssystem som omfatter deteksjon,
+              analyse, respons, kommunikasjon, rapportering og gjenoppretting
+              for hendelser av alle kritikalitetsnivåer.
+
+
+              Hendelseshåndteringssystemet skal inkludere klare kriterier for
+              aktivering av driftskontinuitetsplaner, definert
+              eskaleringslogikk, samt prosedyrer for varsling av interne og
+              eksterne parter, herunder tredjeparter, tilsynsmyndigheter,
+              Datatilsynet og virksomhetens eier der dette er relevant.
+
+
+              ```
+
+              Internt metodeverk:   HH-019
+
+              ISO 27002:            5.1, 5.6, 5.25, 5.26, 5.24, 6.8
+
+              NIST CSF 2.0:         GV.RM-04, GV.RM-05, ID.RA-06, DE.AE-02,
+              DE.AE-06, DE.AE-08, ID.RA-08, DE.AE-04, DE.AE-07, RS.MA-02,
+              RS.MA-03, RS.MA-04, RS.MA-05, RS.AN-03, RS.AN-06, RS.AN-07,
+              RS.AN-08, RC.CO-04, GV.SC-08, ID.IM-03, GV.SC-02, GV.SC-03,
+              RS.MA-01, RC.RP-01, RC.RP-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 3.3.6, 4.1.1, 4.1.2, 4.1.3, 4.1.4, 4.1.5,
+              4.1.6, 4.2, 4.2.2, 4.2.3, 4.3, 4.3.5, 4.3.3
+
+              Sikkerhetsloven:      § 2-4, § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Test full reetablering
+          action:
+            ID: 2IpCC
+            description: >-
+              Test reetablering av plattform og tjenster fra bunnen av,
+              inklusive fra database-backup
+
+
+              ```
+
+              Internt metodeverk:   TE-068
+
+              ISO 27002:            5.29
+
+              NIST CSF 2.0:         ID.IM-02, RC.RP-03, RS.MI-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.6
+
+              Sikkerhetsloven:      § 4-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Hold beredskapsøvelse
+          action:
+            ID: uCG9y
+            description: >-
+              Hold beredskapsøvelse for ulike utfordringer knyttet til
+              driftskontinuitet, mål tid til å gjenopprette full drift (og vit
+              hva som eventuelt er gått tapt). Involver også tredjeparter i
+              øvelsen, hvis det er relevant
+
+
+              ```
+
+              Internt metodeverk:   TE-070
+
+              ISO 27002:            5.29
+
+              NIST CSF 2.0:         RC.RP-05, RC.CO-03, ID.IM-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.6, 3.4.5
+
+              Sikkerhetsloven:      § 4-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Kjør post-mortem
+          action:
+            ID: 2ekev
+            description: >-
+              Teamet skal gjennomføre post-mortem-analyser etter relevante
+              hendelser for å identifisere årsaker, læringspunkter og
+              forbedringstiltak. Post-mortem-arbeidet skal følge en etablert og
+              dokumentert metode som sikrer objektiv vurdering av
+              hendelsesforløpet, tydelige anbefalinger og oppfølging av tiltak.
+              Kontrollen anses oppfylt når teamet har en fast praksis for å
+              gjennomføre post-mortem etter hendelser, dokumenterer funnene og
+              sikrer at tiltak blir prioritert og fulgt opp.
+
+
+              ```
+
+              Internt metodeverk:   HH-044
+
+              ISO 27002:            5.27, 5.36
+
+              NIST CSF 2.0:         RS.AN-03, RS.AN-06
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.4, 4.4.1, 4.4.2, 4.4.3, 4.4.4, 3.2.5
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Begrens API-ressursbruk
+          action:
+            ID: dTocI
+            description: |-
+              Begrens antall kall (per klient), størrelse på input/output etc
+
+              ```
+              Internt metodeverk:   UT-034
+              ISO 27002:            8.6
+              NIST CSF 2.0:
+              OWASP ASVS 4.0.3:     V12.3.5, V12.1.3, V12.1.2
+              NSMs grunnprinsipper:
+              Sikkerhetsloven:
+              ```
+            url: ''
+            status: Not OK
+        - title: Monitorer ressursbruk
+          action:
+            ID: mtbAX
+            description: >-
+              Sett opp monitorering for å kunne se og drive aktiv oppfølging av
+              bruk av penger, CPU, minne, CO2 etc. Sett alarmer for når
+              grensenivåer krysses
+
+
+              ```
+
+              Internt metodeverk:   OV-061
+
+              ISO 27002:            8.6, 8.16
+
+              NIST CSF 2.0:         PR.IR-04, DE.CM-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 160000
+  - title: >-
+      Trusselaktør utnytter at angrepsforsøk ikke oppdages eller ikke håndteres
+      raskt og riktig​
+    scenario:
+      ID: pB8g1
+      description: >-
+        Manglende overvåkning av bruk kan gi en trusselaktør mulighet til å
+        skjule aktivitet, benekte at en aktivitet har skjedd, eller forlenge et
+        angrep. Et gjennomført eller pågående angrep blir ikke håndtert riktig
+        eller raskt nok
+      threatActors:
+        - Hacktivist
+        - Nation/government
+        - Insider
+      vulnerabilities:
+        - Unmonitored use
+      risk:
+        probability: 1
+        consequence: 3200000
+      actions:
+        - title: Hold beredskapsøvelse
+          action:
+            ID: uCG9y
+            description: >-
+              Hold beredskapsøvelse for ulike utfordringer knyttet til
+              driftskontinuitet, mål tid til å gjenopprette full drift (og vit
+              hva som eventuelt er gått tapt). Involver også tredjeparter i
+              øvelsen, hvis det er relevant
+
+
+              ```
+
+              Internt metodeverk:   TE-070
+
+              ISO 27002:            5.29
+
+              NIST CSF 2.0:         RC.RP-05, RC.CO-03, ID.IM-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.6, 3.4.5
+
+              Sikkerhetsloven:      § 4-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Etabler og vedlikehold et helhetlig system for hendelseshåndtering
+          action:
+            ID: RcuGz
+            description: >-
+              Sørg for å det etablere, drifte og kontinuerlig forbedre et
+              helhetlig hendelseshåndteringssystem som omfatter deteksjon,
+              analyse, respons, kommunikasjon, rapportering og gjenoppretting
+              for hendelser av alle kritikalitetsnivåer.
+
+
+              Hendelseshåndteringssystemet skal inkludere klare kriterier for
+              aktivering av driftskontinuitetsplaner, definert
+              eskaleringslogikk, samt prosedyrer for varsling av interne og
+              eksterne parter, herunder tredjeparter, tilsynsmyndigheter,
+              Datatilsynet og virksomhetens eier der dette er relevant.
+
+
+              ```
+
+              Internt metodeverk:   HH-019
+
+              ISO 27002:            5.1, 5.6, 5.25, 5.26, 5.24, 6.8
+
+              NIST CSF 2.0:         GV.RM-04, GV.RM-05, ID.RA-06, DE.AE-02,
+              DE.AE-06, DE.AE-08, ID.RA-08, DE.AE-04, DE.AE-07, RS.MA-02,
+              RS.MA-03, RS.MA-04, RS.MA-05, RS.AN-03, RS.AN-06, RS.AN-07,
+              RS.AN-08, RC.CO-04, GV.SC-08, ID.IM-03, GV.SC-02, GV.SC-03,
+              RS.MA-01, RC.RP-01, RC.RP-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 3.3.6, 4.1.1, 4.1.2, 4.1.3, 4.1.4, 4.1.5,
+              4.1.6, 4.2, 4.2.2, 4.2.3, 4.3, 4.3.5, 4.3.3
+
+              Sikkerhetsloven:      § 2-4, § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Registrer hendelse automatisk
+          action:
+            ID: ueGBc
+            description: >-
+              Systemet i størst mulig grad automatisk registrere relevante
+              hendelser og avvik i produktet basert på definerte kriterier,
+              inkludert feiltilstander, ytelsesavvik og sikkerhetsrelaterte
+              hendelser.
+
+
+              Hendelser skal også opprettes når logging, scanning etc ikke
+              kjører som normalt.
+
+
+              Hendelsesregistreringen skal i størst mulig grad integreres med
+              overvåking og vaktordning, og skal understøtte videre analyse,
+              eskalering og rapportering i tråd med gjeldende tjenestenivåkrav.
+
+
+              ```
+
+              Internt metodeverk:   HH-021
+
+              ISO 27002:            6.8, 5.24
+
+              NIST CSF 2.0:         ID.RA-07, PR.PS-04, DE.CM-09, GV.SC-08,
+              ID.RA-01, DE.AE-08, RS.MA-02
+
+              OWASP ASVS 4.0.3:     V8.1.4, V9.2.5
+
+              NSMs grunnprinsipper: 3.3.3
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Registrer hendelse manuelt
+          action:
+            ID: 9QPVR
+            description: >-
+              Teamet skal kunne manuelt registrere, klassifisere og varsle om
+              hendelser som representerer vesentlige avvik, herunder mistanke om
+              sikkerhetsbrudd, integritetsavvik, tilgjengelighetsproblemer eller
+              driftsforstyrrelser. Manuell registrering skal sikre at hendelser
+              som ikke fanges opp automatisk likevel blir logget, vurdert og
+              håndtert i tråd med etablerte prosedyrer for eskalering og
+              hendelseshåndtering.
+
+
+              ```
+
+              Internt metodeverk:   HH-022
+
+              ISO 27002:            6.8, 5.24
+
+              NIST CSF 2.0:         ID.RA-07, GV.SC-08, DE.AE-08, RS.MA-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Nøytraliser og håndter hendelse
+          action:
+            ID: ZFks9
+            description: >-
+              Teamet skal så raskt som mulig kunne vurdere og klassifisere
+              hendelsens kritikalitet, mobilisere nødvendige fagressurser og
+              gjennomføre tiltak for å stoppe, begrense eller nøytralisere
+              hendelsen. Hendelseshåndteringen skal omfatte aktivering av
+              relevante driftskontinuitetsplaner, samt koordinert innsats mellom
+              de involverte teamene for å sikre stabilisering av tjenester og
+              redusere konsekvenser. Prosessen skal være dokumentert, øvd og
+              forankret slik at teamet kan reagere effektivt og konsekvent på
+              hendelser av ulik alvorlighetsgrad.
+
+
+              ```
+
+              Internt metodeverk:   HH-177
+
+              ISO 27002:
+
+              NIST CSF 2.0:         RS.MA-02, RS.MA-03, RS.MA-04, RS.MA-05,
+              RC.RP-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Kjør post-mortem
+          action:
+            ID: 2ekev
+            description: >-
+              Teamet skal gjennomføre post-mortem-analyser etter relevante
+              hendelser for å identifisere årsaker, læringspunkter og
+              forbedringstiltak. Post-mortem-arbeidet skal følge en etablert og
+              dokumentert metode som sikrer objektiv vurdering av
+              hendelsesforløpet, tydelige anbefalinger og oppfølging av tiltak.
+              Kontrollen anses oppfylt når teamet har en fast praksis for å
+              gjennomføre post-mortem etter hendelser, dokumenterer funnene og
+              sikrer at tiltak blir prioritert og fulgt opp.
+
+
+              ```
+
+              Internt metodeverk:   HH-044
+
+              ISO 27002:            5.27, 5.36
+
+              NIST CSF 2.0:         RS.AN-03, RS.AN-06
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.4, 4.4.1, 4.4.2, 4.4.3, 4.4.4, 3.2.5
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Etabler og vedlikehold vaktordning for produktet
+          action:
+            ID: AVnap
+            description: >-
+              Det skal etableres og vedlikeholdes en vaktordning for produktet
+              som sikrer at hendelser håndteres innenfor gjeldende
+              tjenestenivåkrav.
+
+
+              Vaktordningen skal ha tydelig ansvarsfordeling og definerte
+              eskaleringsrutiner mellom 1., 2. og 3. linje-support, inkludert
+              aktivering av tekniske og tjenestemessige ressurser ved behov.
+
+
+              Ordningen skal være dokumentert, testet og forankret med de
+              enhetene som inngår i vaktløpet.
+
+
+              ```
+
+              Internt metodeverk:   HH-020
+
+              ISO 27002:            5.1, 5.2, 5.30, 8.16
+
+              NIST CSF 2.0:         GV.OC-04, PR.IR-03, PR.IR-04, DE.CM-01,
+              RS.MA-01, RS.MA-02, RS.CO-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.1, 2.1.2, 3.3.6, 4.1.1, 4.1.2, 4.1.3,
+              4.1.4, 4.1.5, 4.1.6, 4.2.2, 4.2.3
+
+              Sikkerhetsloven:      § 2-4, § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Varsling og eskalering ved hendelser
+          action:
+            ID: aoEJi
+            description: >-
+              Teamet skal ha klare rutiner for hvem som skal varsles ved ulike
+              typer hendelser og kritikalitetsnivåer, og hvilke
+              kommunikasjonskanaler som skal benyttes. Varslingsprosessen skal
+              dekke både intern eskalering av alvorlige hendelser og nødvendig
+              informasjon til berørte interne eller eksterne parter. Rutinen
+              skal være dokumentert, testet og kjent for alle som inngår i
+              prosessen, slik at varsling kan gjennomføres raskt og presist i
+              tråd med gjeldende regulatoriske krav og tjenestenivåkrav.
+
+
+              ```
+
+              Internt metodeverk:   HH-178
+
+              ISO 27002:
+
+              NIST CSF 2.0:         RS.MA-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.3, 4.1.4, 4.1.6, 3.3.6
+
+              Sikkerhetsloven:      § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Monitorer aksesslogg
+          action:
+            ID: eqJzw
+            description: >-
+              Monitorer akssessloggen for trafikkvolum, land (fra IP) og
+              http-statuskoder, og sett opp tilhørende tilhørende alarmer
+
+
+              ```
+
+              Internt metodeverk:   OV-053
+
+              ISO 27002:            8.16
+
+              NIST CSF 2.0:         ID.RA-07, DE.CM-06, DE.CM-03
+
+              OWASP ASVS 4.0.3:     V1.7.2, V7.1.4, V11.1.7, V11.1.8
+
+              NSMs grunnprinsipper: 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7, 3.3,
+              3.3.2
+
+              Sikkerhetsloven:      § 6-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Monitorer app-logg
+          action:
+            ID: Rj31r
+            description: >-
+              Vær i stand til å se og rydde opp i ERROR- og WARN-nivåer og følge
+              korrelasjonsid til andre logger. Ha nok info til å kunne
+              identifisere problemet, f.eks stacktrace. Det skal ikke være
+              personopplysninger i denne loggen
+
+
+              ```
+
+              Internt metodeverk:   OV-054
+
+              ISO 27002:            8.16, 8.15
+
+              NIST CSF 2.0:         ID.RA-07, DE.CM-01
+
+              OWASP ASVS 4.0.3:     V1.7.2, V7.1.4, V11.1.7, V11.1.8
+
+              NSMs grunnprinsipper: 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7, 3.3,
+              3.3.2
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Sjekk sikker app-logg
+          action:
+            ID: FqijD
+            description: >-
+              Personopplysninger skrives kun til sikker-logg. Korrelasjonsid
+              følger app-logg. Merk at trengs tilgangsstyring, og loggen skal
+              generelt IKKE være tilgjengelig for produktteamet
+
+
+              ```
+
+              Internt metodeverk:   OV-055
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:     V1.7.2, V7.1.4
+
+              NSMs grunnprinsipper: 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7, 3.3
+
+              Sikkerhetsloven:      § 6-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Sjekk audit-logg
+          action:
+            ID: 22Wtn
+            description: >-
+              Ha kontroll på antall unike brukere, ikke-autentiserte og
+              ikke-autoriserte kall. Merk at audit-logg skal være under
+              tilgangsstyring og generelt IKKE tilgjengelig for teamet. Loggen
+              skal kunne svare på problemstillinger knyttet til benektbarhet.
+
+
+              ```
+
+              Internt metodeverk:   OV-056
+
+              ISO 27002:
+
+              NIST CSF 2.0:         ID.RA-07, DE.CM-06
+
+              OWASP ASVS 4.0.3:     V1.7.2, V7.1.4, V11.1.8
+
+              NSMs grunnprinsipper: 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7, 3.3,
+              3.3.2
+
+              Sikkerhetsloven:      § 6-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Skru på intern helsesjekk
+          action:
+            ID: oo5xg
+            description: >-
+              Ha helsesjekk av/alarmer for kjørende avhengigheter, f.eks
+              database, nettverk og tredjeparterstjenester. Loggføres og
+              vurderes opp mot hendelser og tjenestenivå-krav
+
+
+              ```
+
+              Internt metodeverk:   OV-059
+
+              ISO 27002:            8.16
+
+              NIST CSF 2.0:         DE.CM-01, DE.CM-02
+
+              OWASP ASVS 4.0.3:     V9.2.5
+
+              NSMs grunnprinsipper: 2.3.1, 2.3.3
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Skru på ekstern helsesjekk
+          action:
+            ID: 0xYuA
+            description: >-
+              Sett opp en ekstern helsesjekk av tjenester som er tilgjengelig
+              utenfra. Resultatene bør loggføres, slik at de kan brukes til
+              vurdering opp mot hendelser og tjenestenivåavtaler. Sett
+              alarmnivåer, slik at unormale nivåer trigger oppfølging av
+              ansvarlig vakt
+
+
+              ```
+
+              Internt metodeverk:   OV-060
+
+              ISO 27002:            8.16
+
+              NIST CSF 2.0:         DE.CM-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.3.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Løs åpne hendelser
+          action:
+            ID: GNcfT
+            description: >-
+              Analyser og avslutt hendelser; lag oppgaver for langsiktige
+              forbedringer; gjennomfør post mortem
+
+
+              ```
+
+              Internt metodeverk:   UT-043
+
+              ISO 27002:            5.25, 5.26, 5.36
+
+              NIST CSF 2.0:         ID.RA-06, RC.RP-06, RS.MI-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.8, 4.3.6
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Bruk funksjonsbrytere
+          action:
+            ID: fqsJD
+            description: >-
+              Etabler funksjonsbrytere ved trunk-based-utvikling. Behold
+              muligheten til å skru av ulike funksjoner i tjenesten ved behov.
+              Ha tilgangsstyring på redigering av
+              funksjonsbryter-innstillinger.
+
+
+              ```
+
+              Internt metodeverk:   UT-050
+
+              ISO 27002:            5.32
+
+              NIST CSF 2.0:         PR.PS-02, RS.MI-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Tildel sikkerhetsroller
+          action:
+            ID: BaTVj
+            description: >-
+              Klargjør og beskriv roller og ansvar knyttet til
+              informasjonssikkerhet knyttet til produktet, inklusive opplæring,
+              sikkerhetsansvarlig og kontaktpersoner, eskalering ved hendelser
+              etc
+
+
+              ```
+
+              Internt metodeverk:   AR-004
+
+              ISO 27002:            5.2, 5.3
+
+              NIST CSF 2.0:         GV.RR-02, GV.SC-02, GV.RR-01, RS.CO-03,
+              RS.CO-02, GV.RR-03, GV.RM-05, ID.IM-04, PR.AT-01, PR.AT-02,
+              RS.MA-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.2, 1.3.3, 2.10.2, 2.10.4
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 3200000
+  - title: Produktet er sterkt avhengig av tredjeparter​
+    scenario:
+      ID: ANVS2
+      description: >-
+        En sterk knytning til en eller flere tredjeparter gir andre kontroll
+        over aspekter som kostnader og sikkerhet. Tredjeparter kan bidra med
+        eller levere kode, biblioteker, kjørende applikasjoner/tjenester,
+        dataprodukter eller SaaS-, PaaS-, CaaS- eller IaaS-tjenester. Tiltak bør
+        inkludere exist-strategier og kontroll med verdikjedene frem til
+        produktene
+      threatActors:
+        - Reckless employee
+      vulnerabilities:
+        - Flawed design
+      risk:
+        probability: 0.05
+        consequence: 160000
+      actions:
+        - title: Ha exit-plan
+          action:
+            ID: fxT6n
+            description: >-
+              Sørg for at det ikke oppstår for sterke bindinger til
+              enkeltleverandører for nøkkelfunksjonalitet, og planlegg for
+              alternative løsninger
+
+
+              ```
+
+              Internt metodeverk:   AR-171
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Følg med på oppkjøpsplaner
+          action:
+            ID: E1m3V
+            description: >-
+              Sikre varsel om oppkjøpsplaner og fusjoner hos underleverandører,
+              f.eks sky-, software- og infrastrukturleverandører
+
+
+              ```
+
+              Internt metodeverk:   AR-011
+
+              ISO 27002:            5.21, 5.22
+
+              NIST CSF 2.0:         GV.OC-05, GV.SC-07
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:      § 10
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Forvalt lisenser
+          action:
+            ID: 61BHk
+            description: >-
+              Sjekk at lisensavtaler er oppfylt. Skaler lisens opp og ned etter
+              bruk. Hold oversikt over tidspunkt for fornyelser
+
+
+              ```
+
+              Internt metodeverk:   OP-149
+
+              ISO 27002:            5.32
+
+              NIST CSF 2.0:         ID.AM-02, ID.AM-08
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.2, 1.2.2, 1.2.4, 1.2.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Inngå sikkerhetsavtale
+          action:
+            ID: cvqIP
+            description: >-
+              Inngå sikkerhetsavtale med underleverandør (f.eks skytjenester)
+              hvis det behandles sikkerhetsgraderte data (altså utover
+              skjermingsverdig ugradert).
+
+
+              ```
+
+              Internt metodeverk:   AR-005
+
+              ISO 27002:            5.20
+
+              NIST CSF 2.0:         GV.OC-03, GV.SC-05
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:      § 9-2
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr kjøp av skytjenester
+          action:
+            ID: loKe8
+            description: >-
+              Anskaffelse av skytjenester skal inkludere vurdering av prising,
+              risiko og tjenestenivåkrav, i tillegg til kontrollrutiner for
+              faktisk bruk og kostnad
+
+
+              ```
+
+              Internt metodeverk:   AR-006
+
+              ISO 27002:            5.19, 5.20, 5.21, 5.22, 5.23
+
+              NIST CSF 2.0:         GV.SC-07, GV.SC-01, GV.SC-04, GV.SC-05,
+              ID.AM-04, GV.SC-06, GV.OC-05, GV.SC-09, GV.SC-10
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1, 2.1.1, 2.1.9, 2.1.10, 1.2.4
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr kjøp  av lisenser
+          action:
+            ID: xF6WJ
+            description: >-
+              Anskaffelse av programvarelisenser til verktøy, plattform og
+              infrastruktur skal inkludere vurdering av prising og risiko, i
+              tillegg til kontrollrutiner for faktisk bruk og kostnad
+
+
+              ```
+
+              Internt metodeverk:   AR-007
+
+              ISO 27002:            5.19, 5.20, 5.21, 5.22
+
+              NIST CSF 2.0:         GV.SC-04, ID.AM-04, GV.OC-05, GV.SC-01,
+              GV.SC-05, GV.SC-09, GV.SC-06, GV.SC-07, GV.SC-10
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1, 2.1.1, 1.2.1, 1.2.2
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr kjøp av utstyr
+          action:
+            ID: 1umD4
+            description: >-
+              Anskaffelse av datamaskiner og mobiltelefoner må i tillegg til
+              vurdering prising og risiko, inkludere planer for oversikt,
+              vedlikehold og løpende sikkerhetstiltak
+
+
+              ```
+
+              Internt metodeverk:   AR-008
+
+              ISO 27002:            5.19, 5.20, 5.21, 5.22
+
+              NIST CSF 2.0:         GV.SC-01, GV.SC-05, GV.SC-09, GV.SC-06,
+              GV.SC-07, GV.SC-10
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.2.1, 1.2.2, 1.2.3, 1.2.4, 2.1, 2.1.1,
+              2.1.2
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr bruk av åpen kildekode
+          action:
+            ID: OGOuv
+            description: >-
+              Hold oversikt over omfang av og lisenser knyttet til bruk av åpen
+              og/eller fri kildekode. Hold styr på forskjeller mellom ulike
+              lisensmodeller, som kan stille krav til egen kode
+
+
+              ```
+
+              Internt metodeverk:   AR-009
+
+              ISO 27002:            5.32
+
+              NIST CSF 2.0:         GV.SC-04, ID.AM-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Inngå avtaler med tredjeparter
+          action:
+            ID: SXoak
+            description: >-
+              Inngå avtaler med tredjeparter som skal bruke applikasjoner og
+              funksjoner
+
+
+              ```
+
+              Internt metodeverk:   AR-012
+
+              ISO 27002:            5.14
+
+              NIST CSF 2.0:         GV.OC-05, PR.DS-01, PR-DS-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 3200000
+  - title: Produktet mangler eller bryter avtaler med tredjeparter​
+    scenario:
+      ID: QQrIA
+      description: >-
+        Produktet/tjenesten oppfyller ikke inngåtte avtaler, eller det mangler
+        avtaler eller avtaleinnhold som burde vært på plass. Avtaler som burde
+        vært avsluttet, blir likevel videreført. Tredjeparter kan være
+        datakonsumenter, klienter, datatilbydere og plattformleverandører
+      threatActors:
+        - Reckless employee
+      vulnerabilities:
+        - Misconfiguration
+        - Flawed design
+      risk:
+        probability: 1
+        consequence: 3200000
+      actions:
+        - title: Inngå sikkerhetsavtale
+          action:
+            ID: cvqIP
+            description: >-
+              Inngå sikkerhetsavtale med underleverandør (f.eks skytjenester)
+              hvis det behandles sikkerhetsgraderte data (altså utover
+              skjermingsverdig ugradert).
+
+
+              ```
+
+              Internt metodeverk:   AR-005
+
+              ISO 27002:            5.20
+
+              NIST CSF 2.0:         GV.OC-03, GV.SC-05
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:      § 9-2
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr kjøp av skytjenester
+          action:
+            ID: loKe8
+            description: >-
+              Anskaffelse av skytjenester skal inkludere vurdering av prising,
+              risiko og tjenestenivåkrav, i tillegg til kontrollrutiner for
+              faktisk bruk og kostnad
+
+
+              ```
+
+              Internt metodeverk:   AR-006
+
+              ISO 27002:            5.19, 5.20, 5.21, 5.22, 5.23
+
+              NIST CSF 2.0:         GV.SC-07, GV.SC-01, GV.SC-04, GV.SC-05,
+              ID.AM-04, GV.SC-06, GV.OC-05, GV.SC-09, GV.SC-10
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1, 2.1.1, 2.1.9, 2.1.10, 1.2.4
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Kjør funksjonell test
+          action:
+            ID: r5T5c
+            description: >-
+              Gjennomfør manuell eller automatisert funksjonell-/regresjonstest
+              ved vesentlige endringer
+
+
+              ```
+
+              Internt metodeverk:   TE-067
+
+              ISO 27002:
+
+              NIST CSF 2.0:
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1.7
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr kjøp  av lisenser
+          action:
+            ID: xF6WJ
+            description: >-
+              Anskaffelse av programvarelisenser til verktøy, plattform og
+              infrastruktur skal inkludere vurdering av prising og risiko, i
+              tillegg til kontrollrutiner for faktisk bruk og kostnad
+
+
+              ```
+
+              Internt metodeverk:   AR-007
+
+              ISO 27002:            5.19, 5.20, 5.21, 5.22
+
+              NIST CSF 2.0:         GV.SC-04, ID.AM-04, GV.OC-05, GV.SC-01,
+              GV.SC-05, GV.SC-09, GV.SC-06, GV.SC-07, GV.SC-10
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 2.1, 2.1.1, 1.2.1, 1.2.2
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Styr bruk av åpen kildekode
+          action:
+            ID: OGOuv
+            description: >-
+              Hold oversikt over omfang av og lisenser knyttet til bruk av åpen
+              og/eller fri kildekode. Hold styr på forskjeller mellom ulike
+              lisensmodeller, som kan stille krav til egen kode
+
+
+              ```
+
+              Internt metodeverk:   AR-009
+
+              ISO 27002:            5.32
+
+              NIST CSF 2.0:         GV.SC-04, ID.AM-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper:
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Forvalt lisenser
+          action:
+            ID: 61BHk
+            description: >-
+              Sjekk at lisensavtaler er oppfylt. Skaler lisens opp og ned etter
+              bruk. Hold oversikt over tidspunkt for fornyelser
+
+
+              ```
+
+              Internt metodeverk:   OP-149
+
+              ISO 27002:            5.32
+
+              NIST CSF 2.0:         ID.AM-02, ID.AM-08
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.2, 1.2.2, 1.2.4, 1.2.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Del planlagte endringer
+          action:
+            ID: IlcIA
+            description: >-
+              Sørg for at planlagte produktendringer tidfestes og gjøres
+              tilgjengelig for alle interessenter tilstrekkelig tid i forveien.
+
+
+              Det er bare relevant hvis endringer i produktet kan forventes å
+              kreve tiltak eller tilpasninger hos konsumenter.
+
+
+              ```
+
+              Internt metodeverk:   AR-003
+
+              ISO 27002:            5.6, 8.32
+
+              NIST CSF 2.0:         GV.OC-02, GV.OC-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:      § 2-4
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Inngå avtaler med tredjeparter
+          action:
+            ID: SXoak
+            description: >-
+              Inngå avtaler med tredjeparter som skal bruke applikasjoner og
+              funksjoner
+
+
+              ```
+
+              Internt metodeverk:   AR-012
+
+              ISO 27002:            5.14
+
+              NIST CSF 2.0:         GV.OC-05, PR.DS-01, PR-DS-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Bestem tjenestenivå produkt
+          action:
+            ID: YXXKx
+            description: >-
+              Etabler tjenestenivåavtaler og -mål for normal drift for
+              nøkkelfunksjoner i produktet, spesielt med tanke på
+              brukere/tredjeparter, men også avtalemessige forpliktelser.
+
+
+              **Tjenestenivåavtale** er det samme som 'Service Level Agreement'
+              (SLA), som gjerne brukes for formelle avtaler med
+              tredjeparter/eksterne. Vanlige mål er *tilgjengelighet*,
+              *feilrate* og *responstid*.
+
+
+              **Tjenestenivåmål** er det samme som 'Service Level Objective'
+              (SLO), som er interne mål vi etterstreber for tjenestene våre. Det
+              er som regel akkurat samme typer som brukes for tjenestenivåkrav
+
+
+              **Tjenstenivåindikator** er det samme som 'Service Level
+              Indicator' (SLI), som er konkrete metrikker som legges til grunn
+              for å si om avtaler brytes eller er innenfor målene. For eksempel
+              kan *feilrate* måles i forholdet mellom HTTP-statuskodene 5xx og
+              2xx for web-baserte tjenester
+
+
+              ```
+
+              Internt metodeverk:   AR-018
+
+              ISO 27002:            8.6, 8.16, 5.30
+
+              NIST CSF 2.0:         GV.OC-04, PR.IR-03, PR.IR-04, DE.CM-01
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.2.2, 2.1.1, 2.1.2, 2.3.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Oppdater eksterne testmiljøer
+          action:
+            ID: k4oSk
+            description: >-
+              Sørg for at testmiljøer for tredjeparter, kursmiljøer etc
+              oppdateres til nyeste versjon
+
+
+              ```
+
+              Internt metodeverk:   TE-051
+
+              ISO 27002:            8.8, 8.9
+
+              NIST CSF 2.0:         ID.IM-02
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 3.2.3, 4.1.1
+
+              Sikkerhetsloven:
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Varsling og eskalering ved hendelser
+          action:
+            ID: aoEJi
+            description: >-
+              Teamet skal ha klare rutiner for hvem som skal varsles ved ulike
+              typer hendelser og kritikalitetsnivåer, og hvilke
+              kommunikasjonskanaler som skal benyttes. Varslingsprosessen skal
+              dekke både intern eskalering av alvorlige hendelser og nødvendig
+              informasjon til berørte interne eller eksterne parter. Rutinen
+              skal være dokumentert, testet og kjent for alle som inngår i
+              prosessen, slik at varsling kan gjennomføres raskt og presist i
+              tråd med gjeldende regulatoriske krav og tjenestenivåkrav.
+
+
+              ```
+
+              Internt metodeverk:   HH-178
+
+              ISO 27002:
+
+              NIST CSF 2.0:         RS.MA-04
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 4.1.3, 4.1.4, 4.1.6, 3.3.6
+
+              Sikkerhetsloven:      § 4-5, § 7-3
+
+              ```
+            url: ''
+            status: Not OK
+        - title: Identifiser eksterne interessenter
+          action:
+            ID: KCqWX
+            description: >-
+              Identifiser sentrale eksterne interessenter og deres behov for
+              funksjoner i produktet, f.eks i form av HUKI-matrise
+
+
+              ```
+
+              Internt metodeverk:   AR-172
+
+              ISO 27002:            5.4
+
+              NIST CSF 2.0:         GV.OC-02, RS.CO-02, RS.CO-03, RC.CO-04,
+              GV.RM-05, ID.IM-04, RS.MA-01, GV.SC-02, GV.SC-03
+
+              OWASP ASVS 4.0.3:
+
+              NSMs grunnprinsipper: 1.1.5
+
+              Sikkerhetsloven:      § 2-4
+
+              ```
+            url: ''
+            status: Not OK
+      remainingRisk:
+        probability: 0.0025
+        consequence: 3200000

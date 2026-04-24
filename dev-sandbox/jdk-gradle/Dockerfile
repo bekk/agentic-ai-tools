@@ -17,8 +17,10 @@ RUN apt-get update \
 # GitHub Copilot CLI — standalone binary, no auth required at build time
 RUN curl -fsSL https://gh.io/copilot-install | bash
 
-# Claude Code CLI
-RUN npm install -g @anthropic-ai/claude-code
+# Claude Code CLI — auto-updater disabled via settings
+RUN npm install -g @anthropic-ai/claude-code \
+ && mkdir -p /root/.claude \
+ && printf '{\n  "env": {\n    "DISABLE_AUTOUPDATER": "1"\n  }\n}\n' > /root/.claude/settings.json
 
 # Replace globalThis.fetch with undici's proxy-aware fetch so all Node.js code
 # (including Claude Code) routes fetch() through HTTPS_PROXY automatically.

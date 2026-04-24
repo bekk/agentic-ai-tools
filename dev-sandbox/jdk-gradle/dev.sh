@@ -14,6 +14,12 @@ if ! docker ps --format '{{.Names}}' | grep -q "^dev-proxy$"; then
   echo "[$CONTAINER] Proxy ready."
 fi
 
+if ! docker ps --format '{{.Names}}' | grep -q "^ollama-proxy$"; then
+  echo "[$CONTAINER] Starting ollama-proxy..."
+  docker-compose -f "$COMPOSE_FILE" up -d ollama-proxy
+  echo "[$CONTAINER] ollama-proxy ready."
+fi
+
 docker rm -f "$CONTAINER" 2>/dev/null || true
 
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then

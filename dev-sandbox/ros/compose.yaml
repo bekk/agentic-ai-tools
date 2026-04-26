@@ -1,0 +1,68 @@
+services:
+  proxy:
+    build:
+      context: ../jdk-gradle/proxy
+      dockerfile: Dockerfile
+    container_name: ros-proxy
+    volumes:
+      - ./whitelist.conf:/etc/squid/whitelist.conf:ro
+    networks:
+      - proxy-net
+      - external-net
+    restart: unless-stopped
+
+  ollama-proxy:
+    container_name: ros-ollama-proxy
+    image: nginx:alpine
+    volumes:
+      - ../jdk-gradle/ollama-proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - proxy-net
+      - external-net
+    restart: unless-stopped
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /repos
+    environment:
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - GIT_COMMITTER_NAME=${GIT_AUTHOR_NAME:-Dev}
+      - GIT_COMMITTER_EMAIL=${GIT_AUTHOR_EMAIL:-dev@local}
+      - HTTP_PROXY=http://ros-proxy:3128
+      - HTTPS_PROXY=http://ros-proxy:3128
+      - http_proxy=http://ros-proxy:3128
+      - https_proxy=http://ros-proxy:3128
+      - NO_PROXY=localhost,127.0.0.1,ros-ollama-proxy
+      - no_proxy=localhost,127.0.0.1,ros-ollama-proxy
+      - OLLAMA_HOST=http://ros-ollama-proxy:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-}
+      - AI_BACKEND=${AI_BACKEND:-ollama}
+      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/gcp-key.json
+      - SOPS_AGE_KEY_FILE=/run/secrets/age.key
+    volumes:
+      - repos:/repos
+      - gh-auth:/root/.config/gh
+      - opencode-config:/root/.config/opencode
+      - ${GCP_CREDENTIALS_FILE:-/dev/null}:/run/secrets/gcp-key.json:ro
+      - ${AGE_KEY_FILE:-/dev/null}:/run/secrets/age.key:ro
+    networks:
+      - proxy-net
+    stdin_open: true
+    tty: true
+
+networks:
+  proxy-net:
+    name: ros-proxy-net
+    internal: true
+  external-net:
+    name: ros-external-net
+
+volumes:
+  repos:
+  gh-auth:
+  opencode-config:

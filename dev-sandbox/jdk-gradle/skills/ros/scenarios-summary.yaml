@@ -1,0 +1,309 @@
+# Kompakt oversikt over scenarier og tiltak for RoS-malen
+# Brukes av orkestrerende agent til å sende ett scenario av gangen til subagenter
+# Full template med komplette beskrivelser og rammeverksreferanser: template.yaml
+
+scenarios:
+  - title: Produktet følger ikke lovpålagte krav
+    ID: po6Ft
+    description: >-
+      Krav fra lovgiver eller tilsynsmyndighet er ikke forstått riktig eller ikke
+      implementert – generelle eller produktspesifikke lovverk, forskrifter eller
+      ulovlighet avdekket i tilsyn.
+    threatActors: [Reckless employee]
+    vulnerabilities: [Flawed design]
+    risk: {probability: 1, consequence: 3200000}
+    remainingRisk: {probability: 0.0025, consequence: 3200000}
+    actions:
+      - ID: mbZYe
+        title: Inngå databehandleravtaler
+        check: Databehandleravtale og overføringsgrunnlag er inngått med sky- og underleverandører
+      - ID: gznen
+        title: Gjør avsjekk mot lovverk
+        check: Sjekket at produktet oppfyller relevante lover og forskrifter (GDPR, sikkerhetsloven, matrikkelloven osv.)
+      - ID: uxg3B
+        title: Ha personvernerklæring
+        check: Informasjon om behandling av persondata er tilgjengelig for brukerne
+      - ID: HgX3r
+        title: Gi innsyn i persondata
+        check: Brukere kan be om innsyn i egne persondata
+      - ID: aoEJi
+        title: Varsling og eskalering ved hendelser
+        check: Klare, dokumenterte og testede rutiner for varsling ved hendelser finnes
+      - ID: RcuGz
+        title: Etabler helhetlig hendelseshåndteringssystem
+        check: System for deteksjon, analyse, respons, kommunikasjon og gjenoppretting er etablert og vedlikeholdt
+
+  - title: Produktet følger ikke interne retningslinjer
+    ID: yLIyq
+    description: >-
+      Interne krav fra organisasjonen er ikke forstått eller implementert –
+      utviklingsprosess, innebygd sikkerhet, dokumentasjonskrav, sjekklister
+      eller håndbøker som skal følges.
+    threatActors: [Reckless employee]
+    vulnerabilities: [Flawed design]
+    risk: {probability: 1, consequence: 160000}
+    remainingRisk: {probability: 0.0025, consequence: 160000}
+    actions:
+      - ID: ydsnZ
+        title: Gjør avsjekk med eier
+        check: Avsjekk og godkjenning fra departementet for sikkerhetstilnærming og lovfortolkning
+      - ID: oKzb1
+        title: Gjør avsjekk med tilsyn
+        check: Avsjekk med NSM eller annet tilsyn om sikkerhetstiltak og løsningsvalg
+      - ID: BaTVj
+        title: Tildel sikkerhetsroller
+        check: Roller og ansvar for informasjonssikkerhet er klargjort og beskrevet
+      - ID: CaSz8
+        title: Ha Security Champion
+        check: En Security Champion er utpekt i teamet
+      - ID: OOF4a
+        title: Vedlikehold produkt- og systemdokumentasjon
+        check: README, arkitektur, ADR og brukerdokumentasjon oppdateres ved endringer
+      - ID: SGjnH
+        title: Oppdater RoS/IP/DPIA
+        check: RoS og IP/DPIA er etablert og oppdateres jevnlig (hvert 3–6 mnd)
+      - ID: oZl5k
+        title: Oppdater API-dok
+        check: OpenAPI-dokumentasjon eller tilsvarende er oppdatert
+      - ID: Z9xV6
+        title: Oppdater utviklerportal
+        check: Informasjon i intern utviklerportal, inkl. API-dok og tredjepartstjenester, er oppdatert
+      - ID: Uqqpm
+        title: Bestem driftskontinuitet produkt
+        check: RTO og RPO er definert for produktets funksjoner
+      - ID: WBTYu
+        title: Løs tiltak fra RoS/IP/DPIA
+        check: Tiltak fra RoS og IP/DPIA er prioritert inn i teamets arbeidsflyt
+      - ID: MejRj
+        title: Definer funksjonshierarki
+        check: Oversikt over produktets funksjoner og underfunksjoner finnes
+      - ID: KCqWX
+        title: Identifiser eksterne interessenter
+        check: Sentrale eksterne interessenter og deres behov er identifisert
+      - ID: nKui7
+        title: Vedlikehold sikkerhetshåndbok
+        check: Sikkerhetshåndbok med oversikt over sikkerhetsaktiviteter finnes og er oppdatert
+      - ID: 8kHHC
+        title: Identifiser interne interessenter
+        check: Sentrale interne interessenter og deres behov er identifisert
+      - ID: Qunvx
+        title: Del produkt-misjon
+        check: Team og organisasjon forstår produktets hensikt og avgrensning
+
+  - title: Trusselaktør utnytter sårbarheter i tredjepartskomponenter
+    ID: cik24
+    description: >-
+      En trusselaktør utnytter feil i kode, biblioteker eller produkter hentet
+      utenfra til å endre informasjon eller klientopplevelsen på en måte som
+      villeder eller fremtvinger ønsket oppførsel.
+    threatActors: [Script kiddie]
+    vulnerabilities: [Dependency vulnerability, Misconfiguration]
+    risk: {probability: 1, consequence: 64000000}
+    remainingRisk: {probability: 0.0025, consequence: 3200000}
+    actions:
+      - ID: S8wnO
+        title: Følg eksterne sårbarheter
+        check: Teamet er meldt på varslingsforum og mottar notifikasjoner om nye sårbarheter
+      - ID: HbQbY
+        title: Detekter nye sårbarheter
+        check: Automatisert scanning av kildekode, avhengigheter og kjørende komponenter er satt opp
+      - ID: HSU8e
+        title: Skru på sårbarhetsanalyse
+        check: SAST- og DAST-verktøy (f.eks. Dependabot, Trivy, CodeQL) er aktivert med oppfølgingsrutiner
+      - ID: Qewl6
+        title: Løs nye sårbarheter
+        check: Rutine for å adressere nye sårbarheter raskt (kritiske umiddelbart) er etablert
+
+  - title: Trusselaktør reduserer tjenestenivået eller øker kostnadene
+    ID: 3ztwU
+    description: >-
+      En trusselaktør reduserer tjenestenivå eller øker driftskostnader ved å
+      angripe omkringliggende økosystem eller bruke tjenesten i et omfang eller
+      på en måte den ikke er designet for.
+    threatActors: [Hacktivist, Terrorist organisation, Organised crime]
+    vulnerabilities: [Excessive use, Unmonitored use]
+    risk: {probability: 20, consequence: 160000}
+    remainingRisk: {probability: 0.0025, consequence: 160000}
+    actions:
+      - ID: Ricpy
+        title: Test ytelse
+        check: Ytelsestesting er gjennomført, inkl. med bakgrunnslast
+      - ID: oo5xg
+        title: Skru på intern helsesjekk
+        check: Alarmer og helsesjekk for databaser, nettverk og tredjepartstjenester er satt opp
+      - ID: 0xYuA
+        title: Skru på ekstern helsesjekk
+        check: Ekstern helsesjekk av tjenester tilgjengelig utenfra er satt opp med alarmer
+      - ID: jApS9
+        title: Test katastrofeløsning
+        check: Katastrofeløsning er verifisert (inkl. gjenoppretting av database fra backup)
+      - ID: AVnap
+        title: Etabler og vedlikehold vaktordning
+        check: Vaktordning med eskaleringsrutiner mellom 1., 2. og 3. linje er etablert og dokumentert
+      - ID: RcuGz
+        title: Etabler helhetlig hendelseshåndteringssystem
+        check: System for deteksjon, analyse, respons, kommunikasjon og gjenoppretting er etablert
+      - ID: 2IpCC
+        title: Test full reetablering
+        check: Full reetablering av plattform og tjenester fra bunnen er testet
+      - ID: uCG9y
+        title: Hold beredskapsøvelse
+        check: Beredskapsøvelse for driftskontinuitet er gjennomført, inkl. tredjeparter
+      - ID: 2ekev
+        title: Kjør post-mortem
+        check: Teamet har fast praksis for post-mortem etter hendelser
+      - ID: dTocI
+        title: Begrens API-ressursbruk
+        check: Rate-limiting og begrensninger på input/output-størrelse er implementert
+      - ID: mtbAX
+        title: Monitorer ressursbruk
+        check: Monitorering og alarmer for penger, CPU, minne og CO2-bruk er satt opp
+
+  - title: Trusselaktør utnytter at angrepsforsøk ikke oppdages eller håndteres
+    ID: pB8g1
+    description: >-
+      Manglende overvåkning gir en trusselaktør mulighet til å skjule aktivitet
+      eller forlenge et angrep. Et gjennomført eller pågående angrep håndteres
+      ikke raskt eller riktig nok.
+    threatActors: [Hacktivist, Nation/government, Insider]
+    vulnerabilities: [Unmonitored use]
+    risk: {probability: 1, consequence: 3200000}
+    remainingRisk: {probability: 0.0025, consequence: 3200000}
+    actions:
+      - ID: uCG9y
+        title: Hold beredskapsøvelse
+        check: Beredskapsøvelse for driftskontinuitet er gjennomført, inkl. tredjeparter
+      - ID: RcuGz
+        title: Etabler helhetlig hendelseshåndteringssystem
+        check: System for deteksjon, analyse, respons, kommunikasjon og gjenoppretting er etablert
+      - ID: ueGBc
+        title: Registrer hendelse automatisk
+        check: Systemet registrerer automatisk relevante hendelser, feiltilstander og sikkerhetsavvik
+      - ID: 9QPVR
+        title: Registrer hendelse manuelt
+        check: Teamet kan manuelt registrere og klassifisere hendelser som ikke fanges automatisk
+      - ID: ZFks9
+        title: Nøytraliser og håndter hendelse
+        check: Teamet kan raskt klassifisere, mobilisere og gjennomføre tiltak for å stoppe hendelser
+      - ID: 2ekev
+        title: Kjør post-mortem
+        check: Teamet har fast praksis for post-mortem etter hendelser
+      - ID: AVnap
+        title: Etabler og vedlikehold vaktordning
+        check: Vaktordning med eskaleringsrutiner mellom 1., 2. og 3. linje er etablert og dokumentert
+      - ID: aoEJi
+        title: Varsling og eskalering ved hendelser
+        check: Klare, dokumenterte og testede rutiner for varsling ved hendelser finnes
+      - ID: eqJzw
+        title: Monitorer aksesslogg
+        check: Aksessloggen overvåkes for trafikkvolum, land og HTTP-statuskoder med alarmer
+      - ID: Rj31r
+        title: Monitorer app-logg
+        check: ERROR- og WARN-nivåer i app-loggen følges opp; ingen personopplysninger i loggen
+      - ID: FqijD
+        title: Sjekk sikker app-logg
+        check: Personopplysninger skrives kun til sikker-logg med tilgangsstyring
+      - ID: 22Wtn
+        title: Sjekk audit-logg
+        check: Audit-logg med tilgangsstyring finnes; gir svar på problemstillinger om benektbarhet
+      - ID: oo5xg
+        title: Skru på intern helsesjekk
+        check: Alarmer og helsesjekk for databaser, nettverk og tredjepartstjenester er satt opp
+      - ID: 0xYuA
+        title: Skru på ekstern helsesjekk
+        check: Ekstern helsesjekk av tjenester tilgjengelig utenfra er satt opp med alarmer
+      - ID: GNcfT
+        title: Løs åpne hendelser
+        check: Åpne hendelser analyseres og avsluttes; langsiktige forbedringer opprettes som oppgaver
+      - ID: fqsJD
+        title: Bruk funksjonsbrytere
+        check: Funksjonsbrytere med tilgangsstyring er etablert for å kunne skru av funksjoner ved behov
+      - ID: BaTVj
+        title: Tildel sikkerhetsroller
+        check: Roller og ansvar for informasjonssikkerhet er klargjort og beskrevet
+
+  - title: Produktet er sterkt avhengig av tredjeparter
+    ID: ANVS2
+    description: >-
+      Sterk knytning til tredjeparter gir andre kontroll over kostnader og
+      sikkerhet. Tiltak bør inkludere exit-strategier og kontroll med
+      verdikjedene.
+    threatActors: [Reckless employee]
+    vulnerabilities: [Flawed design]
+    risk: {probability: 0.05, consequence: 160000}
+    remainingRisk: {probability: 0.0025, consequence: 3200000}
+    actions:
+      - ID: fxT6n
+        title: Ha exit-plan
+        check: Plan for å unngå for sterke bindinger til enkeltleverandører for nøkkelfunksjonalitet
+      - ID: E1m3V
+        title: Følg med på oppkjøpsplaner
+        check: Varslingsrutine for oppkjøp og fusjoner hos underleverandører er etablert
+      - ID: 61BHk
+        title: Forvalt lisenser
+        check: Oversikt over lisensavtaler, fornyelsesdatoer og faktisk bruk er etablert
+      - ID: cvqIP
+        title: Inngå sikkerhetsavtale
+        check: Sikkerhetsavtale med underleverandør inngått (relevant ved graderte data)
+      - ID: loKe8
+        title: Styr kjøp av skytjenester
+        check: Anskaffelse av skytjenester inkluderer risikovurdering og kontrollrutiner for bruk/kostnad
+      - ID: xF6WJ
+        title: Styr kjøp av lisenser
+        check: Anskaffelse av programvarelisenser inkluderer risikovurdering og brukskontroll
+      - ID: 1umD4
+        title: Styr kjøp av utstyr
+        check: Anskaffelse av utstyr inkluderer plan for oversikt, vedlikehold og sikkerhetstiltak
+      - ID: OGOuv
+        title: Styr bruk av åpen kildekode
+        check: Oversikt over åpen kildekode og lisensmodeller (inkl. smitteeffekter) finnes
+      - ID: SXoak
+        title: Inngå avtaler med tredjeparter
+        check: Avtaler med tredjeparter som bruker applikasjoner og funksjoner er inngått
+
+  - title: Produktet mangler eller bryter avtaler med tredjeparter
+    ID: QQrIA
+    description: >-
+      Produktet oppfyller ikke inngåtte avtaler, det mangler nødvendig
+      avtaleverk, eller avtaler som burde vært avsluttet videreføres.
+    threatActors: [Reckless employee]
+    vulnerabilities: [Misconfiguration, Flawed design]
+    risk: {probability: 1, consequence: 3200000}
+    remainingRisk: {probability: 0.0025, consequence: 3200000}
+    actions:
+      - ID: cvqIP
+        title: Inngå sikkerhetsavtale
+        check: Sikkerhetsavtale med underleverandør inngått (relevant ved graderte data)
+      - ID: loKe8
+        title: Styr kjøp av skytjenester
+        check: Anskaffelse av skytjenester inkluderer risikovurdering og kontrollrutiner for bruk/kostnad
+      - ID: r5T5c
+        title: Kjør funksjonell test
+        check: Manuell eller automatisert funksjonell-/regresjonstest gjennomføres ved vesentlige endringer
+      - ID: xF6WJ
+        title: Styr kjøp av lisenser
+        check: Anskaffelse av programvarelisenser inkluderer risikovurdering og brukskontroll
+      - ID: OGOuv
+        title: Styr bruk av åpen kildekode
+        check: Oversikt over åpen kildekode og lisensmodeller finnes
+      - ID: 61BHk
+        title: Forvalt lisenser
+        check: Oversikt over lisensavtaler, fornyelsesdatoer og faktisk bruk er etablert
+      - ID: IlcIA
+        title: Del planlagte endringer
+        check: Planlagte produktendringer gjøres tilgjengelig for konsumenter i god tid
+      - ID: SXoak
+        title: Inngå avtaler med tredjeparter
+        check: Avtaler med tredjeparter som bruker applikasjoner og funksjoner er inngått
+      - ID: YXXKx
+        title: Bestem tjenestenivå produkt
+        check: SLA, SLO og SLI er definert for produktets nøkkelfunksjoner
+      - ID: k4oSk
+        title: Oppdater eksterne testmiljøer
+        check: Testmiljøer for tredjeparter og kursmiljøer er oppdatert til nyeste versjon
+      - ID: aoEJi
+        title: Varsling og eskalering ved hendelser
+        check: Klare, dokumenterte og testede rutiner for varsling ved hendelser finnes
+      - ID: KCqWX
+        title: Identifiser eksterne interessenter
+        check: Sentrale eksterne interessenter og deres behov er identifisert

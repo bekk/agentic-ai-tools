@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-# RoS-generator — harness-agnostisk orkestrator for risiko- og sårbarhetsanalyse
+# RoS-generator — orkestrator for risiko- og sårbarhetsanalyse via lokal Ollama
 #
 # Bruk:
 #   bash ros-generate.sh
 #
 # Konfigurasjon via miljøvariabler:
-#   AI_BACKEND    ollama (default) | claude | <vilkårlig kommando som leser prompt fra stdin>
-#   OLLAMA_HOST   http://ollama-proxy:11434 (default)
-#   OLLAMA_MODEL  modellnavn (påkrevd ved AI_BACKEND=ollama)
+#   OLLAMA_HOST   http://ros-ollama-proxy:11434 (default)
+#   OLLAMA_MODEL  modellnavn (påkrevd)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_YAML="$SCRIPT_DIR/template.yaml"
 SUMMARY_YAML="$SCRIPT_DIR/scenarios-summary.yaml"
 
-AI_BACKEND="${AI_BACKEND:-ollama}"
-OLLAMA_HOST="${OLLAMA_HOST:-http://ollama-proxy:11434}"
+OLLAMA_HOST="${OLLAMA_HOST:-http://ros-ollama-proxy:11434}"
 OLLAMA_MODEL="${OLLAMA_MODEL:-}"
 
 # ──────────────────────────────────────────────────────────────────
@@ -35,25 +33,14 @@ ask() {
 
 call_ai() {
     local prompt="$1"
-    case "$AI_BACKEND" in
-        ollama)
-            [[ -n "$OLLAMA_MODEL" ]] || die "Sett OLLAMA_MODEL (f.eks. export OLLAMA_MODEL=llama3.3)"
-            curl -sf "${OLLAMA_HOST}/api/generate" \
-                -H "Content-Type: application/json" \
-                -d "$(jq -n \
-                    --arg model "$OLLAMA_MODEL" \
-                    --arg prompt "$prompt" \
-                    '{model:$model, prompt:$prompt, stream:false, options:{temperature:0.05}}')" \
-                | jq -r '.response'
-            ;;
-        claude)
-            claude -p "$prompt"
-            ;;
-        *)
-            # Generisk: send prompt til stdin på kommandoen
-            echo "$prompt" | $AI_BACKEND
-            ;;
-    esac
+    [[ -n "$OLLAMA_MODEL" ]] || die "Sett OLLAMA_MODEL (f.eks. export OLLAMA_MODEL=llama3.3)"
+    curl -sf "${OLLAMA_HOST}/api/generate" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n \
+            --arg model "$OLLAMA_MODEL" \
+            --arg prompt "$prompt" \
+            '{model:$model, prompt:$prompt, stream:false, options:{temperature:0.05}}')" \
+        | jq -r '.response'
 }
 
 strip_markdown_fences() {

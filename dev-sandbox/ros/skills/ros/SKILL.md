@@ -9,7 +9,7 @@ argument-hint: "[produktbeskrivelse]"
 Kjør skriptet som håndterer innsamling av produktinfo og scenarievurdering:
 
 ```bash
-AI_BACKEND=claude bash ~/.claude/skills/ros/ros-generate.sh
+bash ~/.claude/skills/ros/ros-generate.sh
 ```
 
 Scriptet:

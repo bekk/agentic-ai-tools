@@ -41,7 +41,6 @@ services:
       - no_proxy=localhost,127.0.0.1,ros-ollama-proxy
       - OLLAMA_HOST=http://ros-ollama-proxy:11434
       - OLLAMA_MODEL=${OLLAMA_MODEL:-}
-      - AI_BACKEND=${AI_BACKEND:-ollama}
       - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/gcp-key.json
       - SOPS_AGE_KEY_FILE=/run/secrets/age.key
     volumes:
